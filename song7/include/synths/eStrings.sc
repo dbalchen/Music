@@ -36,8 +36,6 @@ SynthDef("eStrings", {
 
 	sig = LeakDC.ar(sig);
 
-	sig = Splay.ar(sig);
-
 	sig = Splay.ar(sig,spread,center:balance);
 
 	Out.ar(out,sig * amp);

@@ -39,24 +39,21 @@ SynthDef("evenVCO", {
 
 	sig = LeakDC.ar(sig);
 
-	sig = Splay.ar(sig);
-
 	sig = Splay.ar(sig,spread,center:balance);
 
 	Out.ar(out,sig * amp);
 
 }).send(s);
 
-/*
-
-****  Setup midi channel vosc
-*/
+// ****  Setup midi channel vosc
 ~wavetables.free;
 ~wavetables = ~fileList.value("/home/dbalchen/Desktop/eVCO");
 ~windex = ~wavetables.size;
 
 ~wavebuff = ~loadWaveTables.value(~wavetables);
+
 /*
+
 ~evenVCOpoly = {arg num, vel = 1;
 	var ret,tidx;
 	num.postln;
@@ -70,6 +67,7 @@ SynthDef("evenVCO", {
 
 	ret;
 };
+
 */
 
 SynthDef("evoOsc", { arg ss, freq = 55, out = 0, bend = 0, lagtime = 0.15, idx = 0;

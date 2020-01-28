@@ -41,8 +41,6 @@ SynthDef("cello", {
 
 	sig = LeakDC.ar(sig);
 
-	sig = Splay.ar(sig);
-
 	sig = Splay.ar(sig,spread,center:balance);
 
 	Out.ar(out,sig * amp);
@@ -59,7 +57,7 @@ SynthDef("cello", {
 
 ~cellowavebuff = ~loadWaveTables.value(~cellowavetables);
 
-
+/*
 ~channel2 = {arg num, vel = 1;
 	var ret,tidx;
 	num.postln;
@@ -92,7 +90,7 @@ SynthDef("cello", {
 	ret.set(\out,0);
 	ret;
 };
-
+*/
 
 SynthDef("celOsc", { arg ss, freq = 55, out = 0, bend = 0, lagtime = 0.10, idx = 0;
 	var sig;
@@ -114,6 +112,7 @@ SynthDef("celOsc", { arg ss, freq = 55, out = 0, bend = 0, lagtime = 0.10, idx =
 ~celOut = Bus.audio(s, 2);
 ~cel.set(\out,~celOut);
 
+/*
 ~channel3 = {arg num, vel = 1;
 	var ret,tidx;
 	num.postln;
@@ -131,3 +130,5 @@ SynthDef("celOsc", { arg ss, freq = 55, out = 0, bend = 0, lagtime = 0.10, idx =
 	ret.set(\out,0);
 	ret;
 };
+
+*/
