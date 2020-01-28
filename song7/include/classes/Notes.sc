@@ -17,11 +17,11 @@ Notes {
 
 		if((waits == nil) || (waits.size < freqs.size),
 			{waits = Array.newClear(freqs.size).fill(1); });
-		
+
 		if((durations == nil) || (durations.size < freqs.size),
 			{
 				durations = waits.deepCopy;
-			});
+		});
 
 		if(vels == nil,
 			{vels = Array.newClear(freqs.size).fill(1); });

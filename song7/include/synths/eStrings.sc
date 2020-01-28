@@ -58,7 +58,7 @@ SynthDef("eStrings", {
 
 SynthDef("eStringsOsc", { arg ss, freq = 55, out = 0, bend = 0,
 	sinamp = 0.35, sawamp = 0.65, lagtime = 0.15, idx = 0;
-	
+
 	var sig;
 
 	freq = Lag.kr(freq,lagtime);

@@ -9,7 +9,7 @@
 
 SynthDef("evenVCO", {
 	arg ss, freq = 55, out = 0, amp = 1, lagtime = 0, da = 2, gate = 0,
-	idx = 0.2,hpf = 520,bend = 0,
+	idx = 0.2,hpf = 120, bend = 0,
 	attack = 1.5, decay = 2.5, sustain = 0.4, release = 0.75,
 	fattack = 1.5, fdecay = 2.5,fsustain = 0.4, frelease = 0.75,
 	aoc = 0.6, gain = 0.25,cutoff = 12000.00, spread = 1, balance = 0;
@@ -52,12 +52,11 @@ SynthDef("evenVCO", {
 ****  Setup midi channel vosc
 */
 ~wavetables.free;
-~wavetables = ~fileList.value("/home/dbalchen/Music/song7/include/samples/evenVCO");
+~wavetables = ~fileList.value("/home/dbalchen/Desktop/eVCO");
 ~windex = ~wavetables.size;
 
 ~wavebuff = ~loadWaveTables.value(~wavetables);
-
-
+/*
 ~evenVCOpoly = {arg num, vel = 1;
 	var ret,tidx;
 	num.postln;
@@ -71,7 +70,7 @@ SynthDef("evenVCO", {
 
 	ret;
 };
-
+*/
 
 SynthDef("evoOsc", { arg ss, freq = 55, out = 0, bend = 0, lagtime = 0.15, idx = 0;
 	var sig;
@@ -94,7 +93,7 @@ SynthDef("evoOsc", { arg ss, freq = 55, out = 0, bend = 0, lagtime = 0.15, idx =
 ~evoOut = Bus.audio(s, 2);
 ~evo.set(\out,~evoOut);
 
-
+/*
 
 ~evenVCOmono = {arg num,chan, vel = 1,out;
 	var ret,tidx;
@@ -115,3 +114,5 @@ SynthDef("evoOsc", { arg ss, freq = 55, out = 0, bend = 0, lagtime = 0.15, idx =
 	ret.set(\out,out);
 	ret;
 };
+
+*/

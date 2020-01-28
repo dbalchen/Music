@@ -435,7 +435,6 @@ arg ss, freq = 55, out = 0, amp = 0.5, lagt = 0, da = 2, gate = 0,
 
 /*
 
-
 * voscMono
   :PROPERTIES:
   :ARCHIVE_TIME: 2019-05-09 Thu 07:50
@@ -983,6 +982,65 @@ t
 
 */
 
+* Load Midi Manual
+//================= Midi Load ======================
+
+~midifile = SimpleMIDIFile.read( "/home/dbalchen/Music/song7/include/notes/melody.mid" );
+
+~midifile.timeMode = \seconds;
+
+~bpmR = ~midifile.tempo/60;
+
+~timeSig = ((~midifile.timeSignatures).last).at(1);
+
+~midi_pattern = (~midifile.p).iter.all(());
+
+// Pull channel 0
+
+~ch0 = ~midi_pattern.select({arg item,i;item.at('chan') == 0});
+
+~midi_vel = [];
+(~midifile.noteOnEvents ( 0, 1 )).do({arg item,i;~midi_vel = ~midi_vel.add(item.at(5))});
+
+~midi_pitches = [];
+~ch0.do({arg item,i; ~midi_pitches = ~midi_pitches.add(item.at('midinote'))});
+
+~midi_waits = [];
+~ch0.do({arg item,i; ~midi_waits = ~midi_waits.add(0.00 + (~bpmR *item.at('delta')))});
+
+~midi_dur = [];
+~ch0.do({arg item,i; ~midi_dur = ~midi_dur.add(0.00 + (~bpmR *item.at('sustain')))});
+
+// Experiment
+
+~beaTime = [];
+~theTime = 0;
+~midi_waits.do({arg item,i;
+	~theTime = ~theTime + ( 0.00 + item);
+	~beaTime = ~beaTime.add(~theTime);
+});
+
+~beaTime/4;
+~midi_waits.put(~midi_waits.size - 1,(4.0 -(~beaTime%4).last));
+
+// Convert to Notes
+
+~mynotes = Notes.new;
+
+~mynotes.freqs = ~midi_pitches + 12;
+~mynotes.waits = ~midi_waits;
+~mynotes.durations = ~midi_dur;
+~mynotes.vels = ~midi_vel;
+~mynotes.init;
+
+~mynotes.durations;
+~mynotes.freqs;
+~mynotes.waits;
+
+~mytrack = Track.new(~out0,0);
+
+~mytrack.notes = ~mynotes;
+~mytrack.transport.play;
 * [[file:include/synths/mono_evenVCO.sc][Mono evenVCO]]
   :PROPERTIES:
   :ARCHIVE_TIME: 2019-06-22 Sat 22:31
@@ -1054,4 +1112,39 @@ t
 
 	       durations.postln;
        }
+
+
+* Fix Durations
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-09-03 Tue 07:45
+  :ARCHIVE_FILE: ~/Music/song7/song7.org
+  :ARCHIVE_OLPATH: Classes
+  :ARCHIVE_CATEGORY: song7
+  :END:
+*/
+~fixDurations = { arg notes;
+
+	notes.freqs.do({arg item, i;
+
+		var dur = 0, count = i+1;
+
+		if (item != 0,{
+			dur = notes.waits[i];
+			while({(notes.freqs[count] == 0) && (count < notes.freqs.size)},{
+				dur = dur + notes.waits[count];
+				count = count + 1;
+			});
+
+			notes.durations[i] = dur;
+		},
+		{
+			notes.durations[i] = 0;
+		}
+		);
+
+
+	});
+
+	notes;
+};
 

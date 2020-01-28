@@ -17,13 +17,9 @@
 
 	var base, prime;
 
-	prime = num%12;
-
-	prime = prime - key;
+	prime = (num - key)%12;
 
 	base = (num / 12).asInteger;
-
-	if (prime < 0,{prime = prime + 12;base = base -1});
 
 	prime = dic.at(prime) + key + (12*base);
 
@@ -37,9 +33,9 @@
 	var notesback = Array.new(notes.size);
 
 	notes.do({arg item, i;
-
-		notesback.insert(i,~useDic.value(item,dic,key));
-
+		if( item == 'rest',
+			{notesback.insert(i,'rest');},
+			{notesback.insert(i,~useDic.value(item,dic,key))});
 	});
 
 	notesback;
@@ -114,10 +110,11 @@
 ~tt = ~melCurves.value(~verse.notes,~tonerow);
 ~tt.freqs;
 */
-~pcset = {arg tonerow;
 
-	tonerow = tonerow.takeThese({ arg item, index; item == 0; });
-	tonerow = tonerow % 12;
+~pcset = {arg tonerow, key = 0;
+
+	tonerow = tonerow.reject({ arg item, index; item == 'rest'; });
+	tonerow = (tonerow - key) % 12;
 	tonerow = tonerow.as(Set).as(Array).sort;
 	tonerow;
 };
