@@ -4,15 +4,15 @@
 
 
 Notes {
+
   var <>freqs = nil,    <>freq = nil,
     <>probs = nil,        <>prob = nil,
     <>waits = nil,        <>wait = nil,
     <>lag = 0.0,          <>lags = nil,
     <>vel = 1,            <>vels = nil,
     <>durations = nil,    <>duration = nil,
-    <>persistProbs = 1,   <>fixdurs = 0,
-    <>durMult = 1;
-	 
+    <>realtime = nil;
+
   init {
 
     if(freqs == nil,
@@ -33,6 +33,17 @@ Notes {
     if(lags == nil,
       {lags = Array.newClear(freqs.size).fill(0); });
 
+    waits.do({
+	arg item, i;
+
+	if(i == 0,
+	  {realtime = realtime.add(item);},
+	  {realtime = realtime.add( realtime.at(i-1) + item);};
+	);
+		
+      });
+
+
     this.calcFreq.value;
     this.calcDur.value;
     this.calcWait.value;
@@ -41,45 +52,61 @@ Notes {
 
   }
 
+
   calcFreq {
+
     var lazy;
 
     lazy = Plazy({
 
 	var ary,flip,fre;
 
-	if(freqs.size >= probs.size,{ary = Array.newClear(freqs.size);},
-	  {ary = Array.newClear(probs.size);});
+	if(freqs.size >= probs.size,
+	  {ary = Array.newClear(freqs.size);},
+	  {ary = Array.newClear(probs.size);}
+	  );
+
 
 	ary.do({ arg item, i;
+
 	    flip =  rrand(0.0, 1.0);
-	    if(probs.at(i%probs.size) >= flip,{ary.put(i,1);},{ary.put(i,0);})
-	      });
+
+	    if(probs.at(i%probs.size) >= flip,
+	      {ary.put(i,1);},
+	      {ary.put(i,0);}
+	      );
+
+	  });
+
 
 	fre = freqs*ary;
 
-	if(fixdurs == 1,{this.fixDurs.value(ary);});
-
-	if(persistProbs == 1, {probs = ary.deepCopy;});
-
 	fre.do({ arg item, i;
-	    if(item.isKindOf(Array),{
-		if(item.at(0) == 0,{fre.put(i,\rest)};)});
+
+	    if(item.isKindOf(Array),
+	      {
+		if(item.at(0) == 0,{fre.put(i,\rest)};);
+	      });
+
 	    if(item == 0,{fre.put(i,\rest);});
+
 	  });
 
 	Pseq(fre,1);
+
       });
+
 
     freq = Pn(lazy,inf).asStream;
   }
+
 
   calcDur {
 
     var lazy;
 
     lazy = Plazy({
-	Pseq(durations*durMult,1);
+	Pseq(durations,1);
       });
 
     duration = Pn(lazy,inf).asStream;
@@ -87,6 +114,7 @@ Notes {
 
 
   }
+
 
   calcWait {
     var lazy;
@@ -99,6 +127,7 @@ Notes {
 
   }
 
+
   calcLag {
     var lazy;
 
@@ -109,6 +138,7 @@ Notes {
     lag =Pn(lazy,inf).asStream;
 
   }
+
 
   calcVel {
     var lazy;
@@ -121,29 +151,6 @@ Notes {
 
   }
 
-  fixDurs {arg proby = probs;
-
-    proby.do({arg item, i;
-
-	var dur = 0, count = i+1;
-
-	if ((item != 0),{
-	    dur = waits[i];
-	    while({(proby[count] == 0) && (count < proby.size)},{
-		dur = dur + waits[count];
-		count = count + 1;
-	      });
-
-	    durations[i] = dur;
-	  },
-	  {
-	    durations[i] = 0;
-	  }
-
-	  )});
-
-    //    durations.postln;
-  }
 
 }
 

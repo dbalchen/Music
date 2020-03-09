@@ -2,7 +2,11 @@
 // Song 7 Workspace
 // =====================================================================
 
-"/home/dbalchen/Music/song7/include/utlities/PitchClass.sc".load;
+Server.default.makeGui;
+
+"/home/dbalchen/Music/song7/include/setup.sc".load;
+
+"/home/dbalchen/Music/song7/include/classes/PitchClass.sc".load;
 
 
 t = TempoClock.default.tempo = 120/60;
@@ -12,15 +16,28 @@ t = TempoClock.default.tempo = 120/60;
 
 // Instrument Setup
 
-//"/home/dbalchen/Music/song7/include/synths/evenVCO.sc".load;
+"/home/dbalchen/Music/song7/include/synths/evenVCO.sc".load;
 
-~vca = MyADSR.new(0.5,0.5,0.4,0.75,"VCA");
+~vca = MyADSR.new(1.25,3.0,0.5,0.6,"VCA");
 
-~vca.gui;
+//~vca.gui;>
 
-~vcf = MyADSR.new(0.5,0.5,0.4,0.75,"VCF");
+// ~vca = MyADSR.new();
+// ~vca.attacks = (~mynotes.durations.deepCopy * 2) * 0.25;
+// ~vca.decays = (~mynotes.durations.deepCopy * 2) * 1.00;
+// ~vca.sustain = 0.0;
+// ~vca.init(1.0,1.0,0.0,0.4,"VCA");
 
-~vcf.gui;
+
+
+~vcf = MyADSR.new(0.5,3.0,0.5,0.7,"VCF");
+
+//~vcf.gui;
+
+// ~vcf = MyADSR.new();
+// ~vcf.attacks = (~mynotes.durations.deepCopy * 2) * 1.25;
+// ~vcf.decays = (~mynotes.durations.deepCopy * 2) * 1.75;
+// ~vcf.init(1.0,1.0,0.0,0.6,"VCA");
 
 ~evenVCOpoly = {arg num, vel = 1,src,out = 0;
 	var ret,tidx;
@@ -30,16 +47,19 @@ t = TempoClock.default.tempo = 120/60;
 	ret.set(\ss,~wavebuff);
 	ret.set(\freq,num.midicps);
 	ret.set(\idx,tidx);
+	"set VCA".postln;
 	~vca.setADSR(ret);
+	"set VCF".postln;
 	~vcf.setfADSR(ret);
 	ret.set(\out,out);
 	ret.set(\gate,1);
-	ret.set(\hpf,220);
-	ret.set(\amp,0.55);
-
+	ret.set(\cutoff,14000);
+	ret.set(\gain,1.0);
+	ret.set(\aoc,1.0);
+	ret.set(\hpf,500);
+	ret.set(\amp,0.40);
 	ret;
 };
-
 
 
 ~mytrack.noteON = ~evenVCOpoly;
@@ -56,37 +76,21 @@ t = TempoClock.default.tempo = 120/60;
 
 ~mynotes = ~midiFactory.getTrack(0);
 
+~mynotes.init;
 
-~mynotes.freqs;
-
-~mynotes.waits;
-
-~mynotes.durations;
-
-~mynotes.vels;
-
-
-~mynotes.freqs.last;
-
-~mynotes.waits.last;
-
-~mynotes.durations.last;
-
-~mynotes.vels.last;
-
-
-~mynotes.freqs = ~mynotes.freqs +12;
-
-~mytrack = Track.new(~out0,0);
-
-~mytrack.notes = ~mynotes2.init;
-
+~mytrack.notes = ~mynotes;
 
 ~mytrack.transport.play;
 
+
+
+
+
+
+
 ~mytrack.transport.stop;
 
-
+~vca.att;
 ///////////
 
 ~key = 9;
@@ -112,7 +116,7 @@ t = TempoClock.default.tempo = 120/60;
 ~mynotes2.freqs = ~a3rd - 12;
 
 ~mytrack2 = Track.new(~out0,1);
-//~mytrack2.noteON = ~evenVCOpoly;
+~mytrack2.noteON = ~evenVCOpoly;
 
 ~mytrack2.notes = ~mynotes2.init;
 ~mytrack.notes = ~mynotes.init;

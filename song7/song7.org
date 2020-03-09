@@ -1,4 +1,5 @@
 * [[file:song7.sc][song7 workspace]]
+* 
 * Notes
 ** Key A Major
 
@@ -18,6 +19,7 @@
 ** [[file:include/synths/eCello.sc][eCello]]
 
 ** [[file:include/synths/eStrings.sc][eStrings]]
+** [[file:include/synths/eSampler.sc][eSampler]]
 ** FM
 /*
 *** Raw FM

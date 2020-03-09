@@ -95,7 +95,9 @@
 		if( item == 0,
 			{
 
-				subtone = tonerow.copyRange(tonerow.indexOfGreaterThan( mapEnv.at(point)) - gap,tonerow.indexOfGreaterThan( mapEnv.at(point)) + (gap - 1));
+				subtone = tonerow.copyRange(tonerow.indexOfGreaterThan( mapEnv.at(point))
+					- gap,tonerow.indexOfGreaterThan( mapEnv.at(point))
+					+ (gap - 1));
 
 				noteSeq.freqs.put(i,subtone.choose);
 

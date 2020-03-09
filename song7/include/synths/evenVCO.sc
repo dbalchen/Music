@@ -28,6 +28,7 @@ SynthDef("evenVCO", {
 
 	sig = VOsc.ar(ss+idx,freq,0,mul:env*amp);
 
+
 	sig = MoogFF.ar
 	(
 		sig,
@@ -40,14 +41,14 @@ SynthDef("evenVCO", {
 	sig = LeakDC.ar(sig);
 
 	sig = Splay.ar(sig,spread,center:balance);
-
+	//		sig = FreeVerb.ar(sig);
 	Out.ar(out,sig * amp);
 
 }).send(s);
 
 // ****  Setup midi channel vosc
 ~wavetables.free;
-~wavetables = ~fileList.value("/home/dbalchen/Desktop/eVCO");
+~wavetables = ~fileList.value("/home/dbalchen/Music/song7/include/samples/eVCO");
 ~windex = ~wavetables.size;
 
 ~wavebuff = ~loadWaveTables.value(~wavetables);
@@ -55,17 +56,17 @@ SynthDef("evenVCO", {
 /*
 
 ~evenVCOpoly = {arg num, vel = 1;
-	var ret,tidx;
-	num.postln;
-	tidx = (~wavetables.size/120)* num;
-	ret = Synth("evenVCO");
-	ret.set(\ss,~wavebuff);
-	ret.set(\freq,num.midicps);
-	ret.set(\idx,tidx);
-	ret.set(\gate,1);
-	ret.set(\hpf,120);
+var ret,tidx;
+num.postln;
+tidx = (~wavetables.size/120)* num;
+ret = Synth("evenVCO");
+ret.set(\ss,~wavebuff);
+ret.set(\freq,num.midicps);
+ret.set(\idx,tidx);
+ret.set(\gate,1);
+ret.set(\hpf,120);
 
-	ret;
+ret;
 };
 
 */
@@ -94,23 +95,23 @@ SynthDef("evoOsc", { arg ss, freq = 55, out = 0, bend = 0, lagtime = 0.15, idx =
 /*
 
 ~evenVCOmono = {arg num,chan, vel = 1,out;
-	var ret,tidx;
-	num.postln;
-	tidx = (~wavetables.size/120)* num;
+var ret,tidx;
+num.postln;
+tidx = (~wavetables.size/120)* num;
 
-	~evo.set(\freq,num.midicps);
-	~evo.set(\idx,tidx);
-	~evo.set(\ss,~wavebuff);
-	~evo.set(\lagtime,0.1);
+~evo.set(\freq,num.midicps);
+~evo.set(\idx,tidx);
+~evo.set(\ss,~wavebuff);
+~evo.set(\lagtime,0.1);
 
-	ret = Synth("monoPolySynth",addAction: \addToTail);
+ret = Synth("monoPolySynth",addAction: \addToTail);
 
-	ret.set(\gate,1);
-	ret.set(\hpf,120);
-	ret.set(\attack,1.5);
-	ret.set(\sigIn,~evoOut);
-	ret.set(\out,out);
-	ret;
+ret.set(\gate,1);
+ret.set(\hpf,120);
+ret.set(\attack,1.5);
+ret.set(\sigIn,~evoOut);
+ret.set(\out,out);
+ret;
 };
 
 */

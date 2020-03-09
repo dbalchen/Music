@@ -17,7 +17,7 @@ Track {
 
 		channel = chn;
 
-		notes = MyNotes.new;
+		notes = Notes.new;
 		notes.init;
 
 		midiout = chanOut;
