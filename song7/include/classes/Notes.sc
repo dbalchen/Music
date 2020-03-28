@@ -5,151 +5,149 @@
 
 Notes {
 
-  var <>freqs = nil,    <>freq = nil,
-    <>probs = nil,        <>prob = nil,
+    var <>freqs = nil,    <>freq = nil,
+    <>probs = nil,        <>numerator = nil,
     <>waits = nil,        <>wait = nil,
     <>lag = 0.0,          <>lags = nil,
     <>vel = 1,            <>vels = nil,
     <>durations = nil,    <>duration = nil,
     <>realtime = nil;
 
-  init {
+    init {
 
-    if(freqs == nil,
-      {freqs = [60]; });
+        if(freqs == nil,
+            {freqs = [60]; });
 
-    if(probs == nil,
-      {probs = freqs.deepCopy.collect{|x| if(x == 0,{x = 0;},{x = 1;})}});
+        if(probs == nil,
+            {probs = freqs.deepCopy.collect{|x| if(x == 0,{x = 0;},{x = 1;})}});
 
-    if(waits == nil,
-      {waits = Array.newClear(freqs.size).fill(1); });
+        if(waits == nil,
+            {waits = Array.newClear(freqs.size).fill(1); });
 
-    if(durations == nil,
-      {durations = waits.deepCopy;});
+        if(durations == nil,
+            {durations = waits.deepCopy;});
 
-    if(vels == nil,
-      {vels = Array.newClear(freqs.size).fill(1); });
+        if(vels == nil,
+            {vels = Array.newClear(freqs.size).fill(127); });
 
-    if(lags == nil,
-      {lags = Array.newClear(freqs.size).fill(0); });
+        if(lags == nil,
+            {lags = Array.newClear(freqs.size).fill(0); });
 
-    waits.do({
-	arg item, i;
+        waits.do({
+            arg item, i;
 
-	if(i == 0,
-	  {realtime = realtime.add(item);},
-	  {realtime = realtime.add( realtime.at(i-1) + item);};
-	);
-		
-      });
+            if(i == 0,
+                {realtime = realtime.add(item);},
+                {realtime = realtime.add( realtime.at(i-1) + item);};
+            );
 
-
-    this.calcFreq.value;
-    this.calcDur.value;
-    this.calcWait.value;
-    this.calcLag.value;
-    this.calcVel.value;
-
-  }
+        });
 
 
-  calcFreq {
+        this.calcFreq.value;
+        this.calcDur.value;
+        this.calcWait.value;
+        this.calcLag.value;
+        this.calcVel.value;
 
-    var lazy;
-
-    lazy = Plazy({
-
-	var ary,flip,fre;
-
-	if(freqs.size >= probs.size,
-	  {ary = Array.newClear(freqs.size);},
-	  {ary = Array.newClear(probs.size);}
-	  );
+    }
 
 
-	ary.do({ arg item, i;
+    calcFreq {
 
-	    flip =  rrand(0.0, 1.0);
+        var lazy;
 
-	    if(probs.at(i%probs.size) >= flip,
-	      {ary.put(i,1);},
-	      {ary.put(i,0);}
-	      );
+        lazy = Plazy({
 
-	  });
+            var ary,flip,fre;
 
-
-	fre = freqs*ary;
-
-	fre.do({ arg item, i;
-
-	    if(item.isKindOf(Array),
-	      {
-		if(item.at(0) == 0,{fre.put(i,\rest)};);
-	      });
-
-	    if(item == 0,{fre.put(i,\rest);});
-
-	  });
-
-	Pseq(fre,1);
-
-      });
+            if(freqs.size >= probs.size,
+                {ary = Array.newClear(freqs.size);},
+                {ary = Array.newClear(probs.size);}
+            );
 
 
-    freq = Pn(lazy,inf).asStream;
-  }
+            ary.do({ arg item, i;
+
+                flip =  rrand(0.0, 1.0);
+
+                if(probs.at(i%probs.size) >= flip,
+                    {ary.put(i,1);},
+                    {ary.put(i,0);}
+                );
+
+            });
 
 
-  calcDur {
+            fre = freqs*ary;
 
-    var lazy;
+            fre.do({ arg item, i;
 
-    lazy = Plazy({
-	Pseq(durations,1);
-      });
+                if(item.isKindOf(Array),
+                    {
+                        if(item.at(0) == 0,{fre.put(i,\rest)};);
+                });
 
-    duration = Pn(lazy,inf).asStream;
+                if(item == 0,{fre.put(i,\rest);});
 
+            });
 
+            Pseq(fre,1);
 
-  }
-
-
-  calcWait {
-    var lazy;
-
-    lazy = Plazy({
-	Pseq(waits,1);
-      });
-
-    wait =Pn(lazy,inf).asStream;
-
-  }
+        });
 
 
-  calcLag {
-    var lazy;
-
-    lazy = Plazy({
-	Pseq(lags,1);
-      });
-
-    lag =Pn(lazy,inf).asStream;
-
-  }
+        freq = Pn(lazy,inf).asStream;
+    }
 
 
-  calcVel {
-    var lazy;
+    calcDur {
 
-    lazy = Plazy({
-	Pseq(vels,1);
-      });
+        var lazy;
 
-    vel =Pn(lazy,inf).asStream;
+        lazy = Plazy({
+            Pseq(durations,1);
+        });
 
-  }
+        duration = Pn(lazy,inf).asStream;
+
+    }
+
+
+    calcWait {
+        var lazy;
+
+        lazy = Plazy({
+            Pseq(waits,1);
+        });
+
+        wait =Pn(lazy,inf).asStream;
+
+    }
+
+
+    calcLag {
+        var lazy;
+
+        lazy = Plazy({
+            Pseq(lags,1);
+        });
+
+        lag =Pn(lazy,inf).asStream;
+
+    }
+
+
+    calcVel {
+        var lazy;
+
+        lazy = Plazy({
+            Pseq(vels,1);
+        });
+
+        vel =Pn(lazy,inf).asStream;
+
+    }
 
 
 }

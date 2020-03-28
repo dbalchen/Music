@@ -1,13 +1,17 @@
+// Standard Setup for all SC projects
 
 ~midiSetup = {
-	var inPorts = 1;
-	var outPorts = 4;
+    var inPorts = 1;
+    var outPorts = 4;
 
-	MIDIClient.disposeClient;
-	MIDIClient.init(inPorts,outPorts); // explicitly intialize the client
-	inPorts.do({ arg i;
-		MIDIIn.connect(i, MIDIClient.sources.at(i));
-	});
+    MIDIClient.disposeClient;
+
+    MIDIClient.init(inPorts,outPorts); // explicitly intialize the client
+
+    inPorts.do({ arg i;
+        MIDIIn.connect(i, MIDIClient.sources.at(i));
+    });
+
 };
 
 ~midiSetup.value;
@@ -27,5 +31,48 @@
 ~displayCC.free;
 ~displayCC = MIDIdef.cc(\displayCC, {arg ...args; args.postln}); // display CC
 
+~startTimer = {arg num,bpm;
 
-t = TempoClock.default.tempo = 60 / 60;
+    var timeloop;
+
+    t = TempoClock.default.tempo = bpm / 60;
+
+    "Loop started".postln;
+
+    ~rp = {};
+
+    timeloop = {
+
+        arg beat;
+
+        (((beat-1)%num) + 1).post;"  ".post;
+
+
+        if(beat % num == 0, {
+
+            " -- ".postln;
+
+            Routine.run({
+
+                s.sync;
+
+                ~rp.value;
+
+                ~rp={};
+
+            });
+
+        });
+    };
+
+    t.schedAbs(
+
+        0.00, // evaluate this immediately
+        {
+            arg ...args;
+
+            timeloop.value(args[0]); // pass the beat number to our function
+
+            1.0               // do it all again on the next beat
+    });
+};

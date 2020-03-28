@@ -1,0 +1,77 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/dbalchen/Music/song7/song7.sc
+
+
+* Archive this
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-03-23 Mon 18:09
+  :ARCHIVE_FILE: ~/Music/song7/song7.sc
+  :ARCHIVE_CATEGORY: song7
+  :END:
+*/
+
+
+
+
+~startTimer.value(4,120);
+
+~rp ={~mytrack.transport.play;}
+
+~mytrack.transport.play;
+
+~mytrack.transport.stop;
+
+
+
+~startTimer.value(4,120);
+
+~rp ={~mytrack.transport.play;}
+
+~mytrack.transport.play;
+
+~mytrack.transport.stop;
+
+
+
+
+
+~p2 = [5,4,2,0,9];
+~mynotes3 = ~mynotes.deepCopy;
+~mydic = ~buildDic.value(~p1,~p2);
+
+~a3rd = ~fullDic.value(~mynotes.freqs.deepCopy,~mydic,~key);
+
+~mynotes3.freqs = ~a3rd;
+
+~mytrack3 = Track.new(~out0,2);
+~mytrack3.noteON = ~evenVCOpoly;
+
+~mytrack3.notes = ~mynotes3.init;
+
+~mynotes3.freqs = [ 73, 74, 73, 69, 74, 66, 74 ] -24;
+~mytrack3.transport.play;
+
+~mytrack3.transport.stop;~mytrack2.transport.stop;~mytrack.transport.stop;
+
+
+///// 3rd
+~p1 = (~p1 - 3)%12;
+~p2 = (0 - ~p1)%12;
+
+~mynotes.freqs = [ 77, 79, 81, 76, 72, 74, 76, 77, 72 ] - 12;
+~mynotes.freqs = [ 77, 79, 81, 76, 72, 74, 76, 77, 72 ].reverse - 12;
+
+~mynotes.freqs = [ 78, 73, 74, 76, 78, 74, 69, 71, 73 ] -12;
+~mynotes.freqs = [ 78, 73, 74, 76, 78, 74, 69, 71, 73 ].reverse -12;
+
+/////// 5th
+~p2 = [0,2,4,5,7,9];
+~pI = [0,10,8,7,5,3];
+
+~mynotes.freqs =[ 74, 76, 78, 73, 69, 71, 73, 74, 69 ];
+~mynotes.freqs =[ 74, 76, 78, 73, 69, 71, 73, 74, 69 ].reverse;
+
+~mynotes.freqs = [ 76, 74, 72, 77, 69, 79, 77, 76, 69 ];
+~mynotes.freqs = [ 76, 74, 72, 77, 69, 79, 77, 76, 69 ].reverse -12;

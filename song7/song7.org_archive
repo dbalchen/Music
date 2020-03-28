@@ -1148,3 +1148,273 @@ t
 	notes;
 };
 
+
+* FM
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-03-27 Fri 21:53
+  :ARCHIVE_FILE: ~/Music/song7/song7.org
+  :ARCHIVE_OLPATH: SuperCollider
+  :ARCHIVE_CATEGORY: song7
+  :END:
+/*
+** Raw FM
+*/
+(
+ SynthDef(\rawFM, { |out, amp=1, attack=0.25, decay=0.5, sustain=1,  release=2,balance = 0,spread = 1, accelerate=0, hpf = 128,gate = 0, da = 2,
+       freq=440, carP=1, modP=0.66, moduP =0.33, index=3, mul=0.1, detune=0.8, modAttack=0.15, modDecay=2, modSustain=1, modRelease=0.5|
+
+       var env = EnvGen.ar(Env.adsr(attack, decay, sustain, release), gate: gate, doneAction:da);
+
+     var mod = SinOsc.ar(freq * modP * EnvGen.kr(Env.adsr(modAttack, modDecay,modSustain,modRelease,2,-4,0)), 0, freq * index * LFNoise1.kr(5.reciprocal).abs);
+
+     var modu = SinOsc.ar(freq * moduP * EnvGen.kr(Env.adsr(modAttack, modDecay,modSustain,modRelease,2,-4,0)), 0, freq * index * LFNoise1.kr(5.reciprocal).abs);
+
+     var sig = (SinOsc.ar(([freq, freq+detune] * carP) + [mod + modu], 0, mul)) * env;
+
+     sig = HPF.ar(sig,hpf);
+
+     sig = LeakDC.ar(sig);
+
+	 sig = Splay.ar(sig); 
+
+     sig = Splay.ar(sig,spread,center:balance);
+
+     OffsetOut.ar(out, sig * amp);
+
+   }).add;
+)
+
+
+~channel4 = {arg num, vel = 1;
+	     var ret;
+	     num.postln;
+	     ret = Synth("rawFM");
+	     ret.set(\freq,num.midicps);
+	     ret.set(\gate,1);
+	     ret;
+};
+/*
+** Saxaphone
+*/
+
+// =====================================================================
+// Sad Saxaphone
+// =====================================================================
+
+(
+SynthDef("sadSax",
+	{
+		arg out = 0, freq = 110, gate = 0, amp = 1.0, da = 2,hpf = 590,
+		attack = 0.5, decay = 2.0, sustain = 0.0, release = 0.2,
+		fattack = 0.5,fdecay = 2.0, fsustain = 0.0,
+		frelease = 0.1, aoc = 0.7, gain = 1, cutoff = 12200.00,
+		bend = 0, spread = 1, balance = 0;
+
+		var env, fenv, op1, op2, op3, op4, op5, op6,
+		fb1, fb2, fb3, fb4, fb5, fb6, freq2, tmp,
+		sig;
+
+		env  = Env.adsr(attack,decay,sustain,release,curve: 'welch');
+		env = EnvGen.kr(env, gate: gate,doneAction:da);
+
+		fenv = Env.adsr(fattack,fdecay,fsustain,frelease,1,'sine');
+		fenv = EnvGen.kr(fenv, gate);
+
+		fenv = aoc*(fenv - 1) + 1;
+	    freq = {freq * LFNoise2.kr(2.5,0.01,1)}!1;
+		
+		fb2 = FbNode(1);
+		op2 = 0.7*(SinOsc.ar(freq*1.0,fb2, mul: env));
+		fb2.write((0.47*Saw.ar(freq)) + op2);
+
+		fb1 = FbNode(1);
+		op1 = 0.95*SinOsc.ar(freq*1,(fb1) + (op2), mul: env);
+		fb1.write((0.01*Saw.ar(freq)) + op1);
+
+		sig = (op1);
+		
+	sig = MoogFF.ar
+	(
+		sig,
+		cutoff*fenv,
+		gain
+	);
+
+		sig = HPF.ar(sig,hpf);
+
+		sig = LeakDC.ar(sig);
+
+		sig = Splay.ar(sig,spread,center:balance);
+
+		Out.ar(out,amp*sig);
+
+}).send(s);
+
+)
+
+
+
+/*
+*** Setup midi channel Sax
+*/
+~channel4 = {arg num, vel = 1;
+	     var ret;
+	     num.postln;
+	     ret = Synth("sadSax");
+	     ret.set(\freq,num.midicps);
+	     ret.set(\gate,1);
+	     ret;
+};
+
+
+
+
+/*
+** French Horn
+*/
+
+SynthDef("frenchHorn",
+	  {
+	    arg out = 0, freq = 110, gate = 0, amp = 0.250, da = 2,hpf = 20,
+	        attack = 0.2, decay = 1.5, sustain = 0.6, release = 0.3,
+	        fattack = 0.2,fdecay = 1.5, fsustain = 0.8,frelease = 0.3,
+	        aoc = 0.9,gain = 0.7, cutoff = 10200.00,
+	        bend = 0, spread = 0, balance = 0;
+	
+	    var sig, fb1, op1, op2, op3, env, fenv,tmp;
+
+	    env  = Env.adsr(attack,decay,sustain,release,curve: 'welch');
+	    env = EnvGen.kr(env, gate: gate,doneAction:da);
+
+	    fenv = Env.adsr(fattack,fdecay,fsustain,frelease,1,'sine');
+	    fenv = EnvGen.kr(fenv, gate);
+	    fenv = aoc*(fenv - 1) + 1;
+	    
+		op3 = SinOsc.ar(3*freq);
+	    op2 = SinOsc.ar(1*freq);
+
+		  //		tmp = MouseX.kr(0,2).poll;
+	    fb1 = FbNode(1);
+	    op1 = SinOsc.ar(freq,(op2*1.35) + fb1 + (0.0637501*op3));	  
+	    fb1.write(0.3* op1);	  	 
+	    sig = env*op1;
+
+		  
+	    sig = RLPF.ar
+	      (
+	       sig,
+	       cutoff*fenv,
+	       gain
+	       );
+			  
+	    sig = HPF.ar(sig,hpf);
+		  
+		  //	    sig = FreeVerb.ar(sig,0.33); // fan out...
+		  
+	    sig = LeakDC.ar(sig);
+		  
+	    sig = Splay.ar(sig,spread,center:balance);
+
+	    Out.ar(out,amp*sig);
+		  
+	  }).send(s);
+
+
+
+/*
+*** Setup midi channel Sax
+*/
+~channel5 = {arg num, vel = 1;
+	     var ret;
+	     num.postln;
+	     ret = Synth("frenchHorn");
+	     ret.set(\freq,num.midicps);
+	     ret.set(\gate,1);
+	     ret;
+};
+
+
+
+
+
+/*
+
+* Archive
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-03-27 Fri 21:54
+  :ARCHIVE_FILE: ~/Music/song7/song7.org
+  :ARCHIVE_OLPATH: SuperCollider
+  :ARCHIVE_CATEGORY: song7
+  :END:
+** Formants
+    :PROPERTIES:
+    :ARCHIVE_TIME: 2020-03-27 Fri 21:54
+    :END:
+*/
+
+SynthDef("formant", {
+    arg freq = 55, out = 0, amp = 0.5, da = 2, gate = 0,
+      spread = 1, balance = 0, hpf = 420,bend = 0,
+      attack = 1, decay = 2.50, sustain = 0.4, release = 0.75,
+      fattack = 1, fdecay= 2.5,fsustain = 0.4,gain = 1,
+      frelease = 0.5, aoc = 0.5, cutoff = 1500.00;
+
+    var sig,sig2, env,fenv,  fb1, freq2;
+
+    env  = Env.adsr(attack,decay,sustain,release);
+	
+    fenv = Env.adsr(fattack,fdecay,fsustain,frelease);
+    fenv = EnvGen.kr(fenv, gate: gate,doneAction:da);
+    fenv = aoc*(fenv - 1) + 1;
+
+	//    freq = {freq  * bend.midiratio * LFNoise2.kr(1.0,0.0035,1)}!1;
+
+    fb1 = FbNode(1);
+    sig = Formant.ar(freq, freq*3, freq*3.75) + (0.15*fb1);
+	
+    fb1.write(sig);
+	
+    sig = sig*EnvGen.kr(env, gate: gate,doneAction:da);
+	
+    sig = MoogFF.ar
+      (
+       sig,
+       cutoff*fenv,
+       gain
+       );
+	
+    sig = HPF.ar(sig,hpf);
+	
+    sig = LeakDC.ar(sig);
+	
+    sig = Splay.ar(sig,spread,center:balance);
+
+    Out.ar(out,sig * amp);
+
+  }).send(s);
+
+
+
+/*
+*** Midi Setup
+*/
+
+~channel0 = {arg num, vel = 1;
+	     var ret;
+	     num.postln;
+	     ret = Synth("formant");
+	     ret.set(\freq,num.midicps);
+	     ret.set(\gate,1);
+	     ret;
+};
+
+
+~channel0off = {arg num,vel;^nil;};
+
+* Music
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-03-27 Fri 22:04
+  :ARCHIVE_FILE: ~/Music/song7/song7.org
+  :ARCHIVE_CATEGORY: song7
+  :END:
+** Key A Major
