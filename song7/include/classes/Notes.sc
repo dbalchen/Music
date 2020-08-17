@@ -149,7 +149,19 @@ Notes {
 
     }
 
+	
+	rotate {arg how_many = 0;
 
+		freqs = freqs.rotate(how_many);
+		probs = probs.rotate(how_many);
+		waits = waits.rotate(how_many);
+		durations = durations.rotate(how_many);
+		lags = lags.rotate(how_many);
+		vels = vel.rotate(how_many);
+
+		^this;
+	
+	}
 }
 
 

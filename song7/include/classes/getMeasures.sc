@@ -45,7 +45,7 @@
 
     if(diff != 0,{
 
-        subNotes.freqs = [0] ++ subNotes.freqs;
+        subNotes.freqs = ['rest'] ++ subNotes.freqs;
         subNotes.waits = subNotes.waits.addFirst(diff);
         subNotes.durations = subNotes.durations.addFirst(diff);
         subNotes.vels = [127] ++ subNotes.vels;

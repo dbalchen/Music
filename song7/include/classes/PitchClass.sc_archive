@@ -1,0 +1,58 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/dbalchen/Music/song7/include/classes/PitchClass.sc
+
+
+* Old Dic
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-05-10 Sun 15:51
+  :ARCHIVE_FILE: ~/Music/song7/include/classes/PitchClass.sc
+  :ARCHIVE_CATEGORY: PitchClass
+  :END:
+*/
+
+~buildDic =
+{arg pcset1, pcset2;
+    var ldic;
+
+    ldic = Dictionary.new;
+
+    pcset1.do({ arg item, i;
+
+        ldic.put(item,pcset2[i]);
+
+    });
+    ldic;
+};
+
+~useDic =
+{arg num, dic,key;
+
+    var base, prime;
+
+    prime = (num - key)%12;
+
+    base = (num / 12).asInteger;
+
+    prime = dic.at(prime) + key + (12*base);
+
+    prime;
+
+};
+
+
+~fullDic = {arg notes, dic, key;
+
+    var notesback = Array.new(notes.size);
+
+    notes.do({arg item, i;
+        if( item == 'rest',
+            {notesback.insert(i,'rest');},
+            {notesback.insert(i,~useDic.value(item,dic,key))});
+    });
+
+    notesback;
+};
+
+/*

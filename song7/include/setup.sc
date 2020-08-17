@@ -31,24 +31,27 @@
 ~displayCC.free;
 ~displayCC = MIDIdef.cc(\displayCC, {arg ...args; args.postln}); // display CC
 
-~startTimer = {arg num,bpm;
 
-    var timeloop;
+~rp = {};
+
+~startTimer = {arg bpm = 60, num = 4;
+
+    var timeloop,numb;
+
+	numb = num;
 
     t = TempoClock.default.tempo = bpm / 60;
 
     "Loop started".postln;
 
-    ~rp = {};
-
     timeloop = {
 
         arg beat;
 
-        (((beat-1)%num) + 1).post;"  ".post;
+        (((beat-1)%numb) + 1).post;"  ".post;
 
 
-        if(beat % num == 0, {
+        if(beat % numb == 0, {
 
             " -- ".postln;
 
@@ -59,6 +62,8 @@
                 ~rp.value;
 
                 ~rp={};
+
+				numb = num;
 
             });
 

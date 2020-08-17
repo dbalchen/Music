@@ -6,7 +6,6 @@
 Server.default.makeGui;
 
 "/home/dbalchen/Music/song7/include/setup.sc".load;
-
 t = TempoClock.default.tempo = 120/60;
 
 /*
@@ -40,7 +39,7 @@ t = TempoClock.default.tempo = 120/60;
     ret.set(\cutoff,9000);
     ret.set(\gain,0.85);
     ret.set(\aoc,0.70);
-    ret.set(\hpf,425);
+    ret.set(\hpf,125);
     vel = (vel/127)*0.60;
     ret.set(\amp,vel);
     ret;
@@ -54,8 +53,8 @@ t = TempoClock.default.tempo = 120/60;
 /*
 ** Track 1
 */
-~mytrack = Track.new(~out0,0);
 
+~mytrack = Track.new(~out0,0);
 ~mytrack.noteON = ~evenVCOpoly;
 
 /*
@@ -87,7 +86,7 @@ t = TempoClock.default.tempo = 120/60;
 */
 ~mytrack3= Track.new(~out0,2);
 
-~mytrack3.noteON = ~evenVCOpoly;
+~mytrack3.noteON = ~evenVCOpoly; 
 
 /*
 ~mytrack3.noteON = ~evenVCOmono;
@@ -117,27 +116,38 @@ t = TempoClock.default.tempo = 120/60;
 */
 
 ~mynotes = ~getMeasure.value(17,20,~mynotesAll);
+
 ~mytrack.notes = ~mynotes.init;
 
-~pcset.value(~mynotes.freqs,~key);
+~f0 = ~mynotes.freqs.deepCopy;
+~s0 = ~pcset.value(~f0,~key);
 
-~f0 = ~mytrack.notes.freqs.deepCopy;
+~f2 = ~pitchClassT.value(~f0,-2,~key);
+~s2 = ~pcset.value(~f2,~key);
+~f2 = ~pitchMap.value(~f2,~s2,~s0,~key);
 
-~mynotes.freqs = ~pitchClassT.value(~f0,-12,~key);
+~f4i = ~pitchClassT.value(~f0,-4,~key);
+~s4i = ~pcset.value(~f4i,~key);
+~f4i = ~pitchMap.value(~f4i,~s4i,~s0,~key);
 
-~mynotes.freqs = ~f0;
+~f4 = ~pitchClassT.value(~f0,4,~key);
+~s4 = ~pcset.value(~f4,~key);
+~f4 = ~pitchMap.value(~f4,~s4,~s0,~key);
+
+
+~f7 = ~pitchClassT.value(~f0,7,~key);
+~s7 = ~pcset.value(~f7,~key);
+~f7 = ~pitchMap.value(~f7,~s7,~s0,~key);
+
+~f7 = [ 74, 76, 78, 73, 69, 71, 73, 74, 69 ];
 
 /*
 ** Track 2
 */
 
 ~mynotes2 = ~mynotes.deepCopy;
-
-~mynotes2.freqs = ~pitchClassT.value(~f0,-5,~key) -12;
-
+~mynotes2.freqs = ~f7;
 ~mytrack2.notes = ~mynotes2.init;
-
-~f1 = ~mytrack2.notes.freqs.deepCopy;
 
 
 /*
@@ -145,19 +155,24 @@ t = TempoClock.default.tempo = 120/60;
 */
 
 ~mynotes3 = ~mynotes.deepCopy;
-
-~mynotes3.freqs = ~pitchClassT.value(~f0,-10,~key) -12;
-
+~mynotes3.freqs = ~f2;
 ~mytrack3.notes = ~mynotes3.init;
-
-~f2 = ~mytrack3.notes.freqs.deepCopy;
 
 
 /*
 * Playback
 */
 
-~mytrack.transport.play;
+~startTimer.value(120);
+
+~rp = {~mytrack.transport.play;};
+~rp = {~mytrack2.transport.play;};
+~rp = {~mytrack3.transport.play;};
+
+~rp = {~mytrack.transport.play;~mytrack2.transport.play;~mytrack3.transport.play;};
+~rp = {~mytrack.transport.stop;~mytrack2.transport.stop;~mytrack3.transport.stop;};
+
+
 ~mytrack.transport.mute;
 ~mytrack.transport.unmute;
 

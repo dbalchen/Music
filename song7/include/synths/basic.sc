@@ -47,14 +47,16 @@ SynthDef("basicOsc", { arg freq = 55, out = 0, bend = 0, lagtime = 0.25;
 SynthDef("monoPolySynth", { arg sigIn = 0, out = 0, amp = 1.2, da = 2, gate = 0,
 	attack = 1.5, decay = 2.5, sustain = 0.4, release = 0.75,
 	fattack = 1.5, fdecay = 2.5,fsustain = 0.4, frelease = 0.75,
-	aoc = 0.6, gain = 0.25,cutoff = 12000.00,
+	voc = 1, aoc = 0.6, gain = 0.25,cutoff = 12000.00,
 	spread = 1, balance = 0, hpf = 128;
 
 	var sig, env, fenv;
 
 	env = Env.adsr(attack,decay,sustain,release);
 	env = EnvGen.kr(env, gate: gate, doneAction:da);
+	env = voc*(env - 1) + 1;
 
+	
 	fenv = Env.adsr(fattack,fdecay,fsustain,frelease);
 	fenv = EnvGen.kr(fenv, gate,doneAction:da);
 	fenv = aoc*(fenv - 1) + 1;
