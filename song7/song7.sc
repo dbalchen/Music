@@ -23,26 +23,26 @@ t = TempoClock.default.tempo = 120/60;
 // ~vcf.gui;
 
 ~evenVCOpoly = {arg num, vel = 1,src,out = 0;
-    var ret,tidx;
-    tidx = ((~windex-1)/120)* num;
+	var ret,tidx;
+	tidx = ((~windex-1)/120)* num;
 
-    ret = Synth("evenVCO");
-    ret.set(\ss,~wavebuff);
-    ret.set(\freq,num.midicps);
-    ret.set(\idx,tidx);
+	ret = Synth("evenVCO");
+	ret.set(\ss,~wavebuff);
+	ret.set(\freq,num.midicps);
+	ret.set(\idx,tidx);
 
-    ~vca.setADSR(ret);
-    ~vcf.setfADSR(ret);
+	~vca.setADSR(ret);
+	~vcf.setfADSR(ret);
 
-    ret.set(\out,out);
-    ret.set(\gate,1);
-    ret.set(\cutoff,9000);
-    ret.set(\gain,0.85);
-    ret.set(\aoc,0.70);
-    ret.set(\hpf,125);
-    vel = (vel/127)*0.60;
-    ret.set(\amp,vel);
-    ret;
+	ret.set(\out,out);
+	ret.set(\gate,1);
+	ret.set(\cutoff,9000);
+	ret.set(\gain,0.85);
+	ret.set(\aoc,0.70);
+	ret.set(\hpf,125);
+	vel = (vel/127)*0.60;
+	ret.set(\amp,vel);
+	ret;
 };
 
 
@@ -86,7 +86,7 @@ t = TempoClock.default.tempo = 120/60;
 */
 ~mytrack3= Track.new(~out0,2);
 
-~mytrack3.noteON = ~evenVCOpoly; 
+~mytrack3.noteON = ~evenVCOpoly;
 
 /*
 ~mytrack3.noteON = ~evenVCOmono;

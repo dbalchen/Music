@@ -8,7 +8,7 @@ SynthDef("basicSynth", { arg freq = 55, out = 0, amp = 0.75, da = 2, gate = 0,
 	env = Env.adsr(attack,decay,sustain,release);
 	env = EnvGen.kr(env, gate: gate, doneAction:da);
 
-	sig = SinOsc.ar(freq,mul:env);
+	sig = ((0.35*SinOsc.ar(freq,0)) + (0.5*Saw.ar(freq)));
 
 	sig = HPF.ar(sig,hpf);
 
@@ -16,7 +16,7 @@ SynthDef("basicSynth", { arg freq = 55, out = 0, amp = 0.75, da = 2, gate = 0,
 
 	sig = Splay.ar(sig,spread,center:balance);
 
-	Out.ar(out,sig * amp);
+	Out.ar(out,sig * (env*amp));
 
 }).store;
 
@@ -35,10 +35,10 @@ SynthDef("basicSynth", { arg freq = 55, out = 0, amp = 0.75, da = 2, gate = 0,
 SynthDef("basicOsc", { arg freq = 55, out = 0, bend = 0, lagtime = 0.25;
 	var sig;
 
-	sig = (SinOsc.ar(Lag.kr(freq,lagtime)));
-
-	sig = Splay.ar(sig);
-
+	sig =  ((0.35*SinOsc.ar(Lag.kr(freq,lagtime),0)) + (0.5*Saw.ar(Lag.kr(freq,lagtime))));
+	
+    sig = Pan2.ar(sig);
+	
 	Out.ar(out,sig);
 
 }).store;

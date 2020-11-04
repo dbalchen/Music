@@ -4,7 +4,7 @@
 
 SynthDef("frenchHorn",
 	  {
-	    arg out = 0, freq = 110, gate = 0, amp = 0.250, da = 2,hpf = 20,
+	    arg out = 0, freq = 110, gate = 0, amp = 0.1250, da = 2,hpf = 20,
 	        attack = 0.2, decay = 1.5, sustain = 0.6, release = 0.3,
 	        fattack = 0.2,fdecay = 1.5, fsustain = 0.8,frelease = 0.3,
 	        aoc = 0.9,gain = 0.7, cutoff = 10200.00,
@@ -58,25 +58,21 @@ SynthDef("frenchHorn",
 };
 
 
-
-
-
-
 ///////     Basic Synth Def   ///////
 
 
-SynthDef("fmBasic", { arg freq = 55, out = 0, amp = 0.75, da = 2, gate = 0,
-	attack = 1.5, decay = 1.5, sustain = 0.7, release = 0.5,fbr = 0.9,
-	spread = 0.33, balance = 0, hpf = 128;
+SynthDef("fmBasic", { arg freq = 55, out = 0, amp = 0.25, da = 2, gate = 0,
+	attack = 1.5, decay = 1.5, sustain = 0.7, release = 0.5,fbr = 0.0;
 
 	var sig, env, fb;
 
 	env = Env.adsr(attack,decay,sustain,release);
+	
 	env = EnvGen.kr(env, gate: gate, doneAction:da);
 
 	fb = FbNode(1);
  	 
-	sig = SinOsc.ar(freq,fb*fbr,mul:env);
+	sig = SinOsc.ar(freq,(fb*fb)r,mul:env);
 
 	fb.write(sig);
 
@@ -84,7 +80,7 @@ SynthDef("fmBasic", { arg freq = 55, out = 0, amp = 0.75, da = 2, gate = 0,
 
 	sig = LeakDC.ar(sig);
 
-	sig = Splay.ar(sig,spread,center:balance);
+    sig = Pan2.ar(sig,balance);
 
 	Out.ar(out,sig * amp);
 

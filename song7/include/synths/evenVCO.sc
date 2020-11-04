@@ -15,18 +15,18 @@ SynthDef("evenVCO", {
     var sig, env, fenv;
 
     env = Env.adsr(attack,decay,sustain,release);
-    env = EnvGen.kr(env, gate: gate, doneAction:da);
+    env = EnvGen.ar(env, gate: gate, doneAction:da);
 
     fenv = Env.adsr(fattack,fdecay,fsustain,frelease);
-    fenv = EnvGen.kr(fenv, gate,doneAction:da);
+    fenv = EnvGen.ar(fenv, gate,doneAction:da);
     fenv = aoc*(fenv - 1) + 1;
 
     freq = Lag.kr(freq,lagtime);
-    freq = {freq * bend.midiratio * LFNoise2.kr(2.5,0.01,1)}!8;
+    freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!4;
 
-	// sig = VOsc.ar(ss+idx,freq,0,mul:env*amp);
+	 sig = VOsc.ar(ss+idx,freq,0,mul:env*amp);
 
-	sig = SinOsc.ar(freq,0,mul:env*amp) + 0.5*(Saw.ar(2*freq,mul:env*amp));
+	//	sig = SinOsc.ar(freq,0,mul:env*amp) + 0.5*(Saw.ar(2*freq,mul:env*amp));
 
     sig = MoogFF.ar
     (
@@ -37,10 +37,10 @@ SynthDef("evenVCO", {
 
     sig = HPF.ar(sig,hpf);
 
-    sig = LeakDC.ar(sig);
-
-    sig = Splay.ar(sig,spread,center:balance);
+	sig = Splay.ar(sig,spread,center:balance);
     sig = FreeVerb.ar(sig);
+
+	sig = LeakDC.ar(sig);
     Out.ar(out,sig * amp);
 
 }).send(s);
@@ -50,33 +50,36 @@ SynthDef("evenVCO", {
 
 SynthDef("evenVCO2", {
     arg freq = 55, out = 0, amp = 0.5, lagtime = 0, da = 2, gate = 0,
-    idx = 0.2,hpf = 120, bend = 0,
+    idx = 0.2,hpf = 45, bend = 0,
     attack = 1.5, decay = 2.5, sustain = 0.4, release = 0.75,
     fattack = 1.5, fdecay = 2.5,fsustain = 0.4, frelease = 0.75,
-    aoc = 0.6, gain = 0.25,cutoff = 12000.00, spread = 1, balance = 0;
+    aoc = 1, gain = 0.25,cutoff = 12000.00, spread = 1, balance = 0;
 
     var sig, env, fenv, freq2;
 
     env = Env.adsr(attack,decay,sustain,release);
-    env = EnvGen.kr(env, gate: gate, doneAction:da);
+    env = EnvGen.ar(env, gate: gate, doneAction:da);
 
     fenv = Env.adsr(fattack,fdecay,fsustain,frelease);
-    fenv = EnvGen.kr(fenv, gate,doneAction:da);
+    fenv = EnvGen.ar(fenv, gate,doneAction:da);
     fenv = aoc*(fenv - 1) + 1;
 
     freq = Lag.kr(freq,lagtime);
 	freq2 = freq;
 	
-    freq = {freq * bend.midiratio * LFNoise2.kr(2.5,0.01,1)}!12;
-
+    freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!4;
+	/*	
 	sig =  SinOsc.ar(freq,0,mul:0.15);
 	
 	sig = (0.8*sig) + ((Saw.ar(freq,mul:0.2)));
 	
 	sig = sig + ((Saw.ar(2*freq,mul:0.55)));
+	*/	
 
-    sig = MoogFF.ar
-    (
+	sig = 2*(0.55*SinOsc.ar(freq,0) + 0.5*Saw.ar(freq));
+	
+    sig = MoogFF.ar(
+    
         sig,
         cutoff*fenv,
         gain
@@ -85,8 +88,8 @@ SynthDef("evenVCO2", {
     sig = HPF.ar(sig,hpf);
 
     sig = LeakDC.ar(sig);
-
-    sig = Splay.ar(sig,spread,center:balance);
+	//	sig = Pan2.ar(sig,balance,amp);
+	sig = Splay.ar(sig,spread,center:balance);
     sig = FreeVerb.ar(sig);
     Out.ar(out,sig * (env*amp));
 
@@ -137,7 +140,7 @@ SynthDef("evenVCO2", {
     ret.set(\gain,0.85);
     ret.set(\aoc,0.70);
     ret.set(\hpf,125);
-    vel = (vel/127)*0.60;
+    vel = (vel/127)*0.4;
     ret.set(\amp,vel);
     ret;
 };
@@ -157,10 +160,10 @@ SynthDef("evenVCO2", {
     ret.set(\gate,1);
     ret.set(\cutoff,9000);
     ret.set(\gain,0.85);
-    ret.set(\aoc,0.70);
-    ret.set(\hpf,125);
+    ret.set(\aoc,1.0);
+    ret.set(\hpf,25);
     vel = (vel/127)*0.40;
-    ret.set(\amp,0.5);
+    ret.set(\amp,0.15);
     ret;
 };
 

@@ -10,8 +10,11 @@
 
 Server.default.makeGui;
 
+
 "/home/dbalchen/Music/song7/include/setup.sc".load;
+
 "/home/dbalchen/Music/song7/include/classes/PitchClass.sc".load;
+"/home/dbalchen/Music/song7/include/classes/getMeasures.sc".load;
 
 /*
 ** The Song
@@ -22,48 +25,35 @@ t = TempoClock.default.tempo = 120/60;
 
 // Define a track and notes for that track
 ~mytrack = Track.new(~out0,0);
-
 ~mynotes = Notes.new;
 
 // Define the Tonerow and create a table of all possible pitches.
-~tonerow = [0,4,7,9,11];
+~t0 = [0,4,7,9,11];
 
-~pitchR0 = ~createScale.value(~tonerow);
+~pitches = ~createScale.value(~t0);
 
 // Take a subset of the possible pitches
-~p0 = ~pitchR0.select({ arg item, i; (item >= 48) && (item < 77) });
+~p0 = ~pitches.select({ arg item, i; (item >= 48) && (item < 77) });
 
 // Define a 5 over 8 rhythm
 ~r0 = Bjorklund(5, 8);
 
-// Fill that rhythm
-~f0 = ~r0*60;
+// Fill that rhythm with random pitches
 
 ~f0 = ~r0.collect({ arg item, i; item; item*~p0.choose});
 
-~pc0 = ~pcset.value(~f0);
-
-~mynotes.freqs = ~f0;
-
-~f0I = ~pitchClassT.value(~f0,-12);
-~mynotes.freqs = ~f0I;
-
-~pc0I = ~pcset(~f0I);
-
-~f0R =  ~pitchMap.value(~f0,~pc0,~pc0.reverse);
-~mynotes.freqs = ~f0R;
-
-~f0IR =  ~pitchMap.value(~f0I,~pc0I,~pc0I.reverse);
-~mynotes.freqs = ~f0IR;
+~mynotes.freqs = ~f0; // Plug that in to the notes.
 
 ~mytrack.notes = ~mynotes.init;
 
-/*
-~mytrack.noteON = ~fmBasic;
 
-~mytrack.noteON = ~channel0;
+~mytrack.transport.play;
 
-*/
+~mytrack.transport.stop;
+
+~mytrack.transport.mute;
+
+~mytrack.transport.unmute;
 
 /*
 ** Play Track

@@ -6,7 +6,7 @@
 Notes {
 
     var <>freqs = nil,    <>freq = nil,
-    <>probs = nil,        <>numerator = nil,
+    <>probs = nil,        <>numerator = 4,
     <>waits = nil,        <>wait = nil,
     <>lag = 0.0,          <>lags = nil,
     <>vel = 1,            <>vels = nil,

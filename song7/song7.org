@@ -1,15 +1,14 @@
 * Songs
-** [[file:song7.sc][song7 workspace]]
+** [[file:song7.sc][song7]]
 ** [[file:~/Music/song9/song9.sc][song9]]
 ** [[file:~/Music/MuscleBone/include/patch/muscleBonesStrings.sc][Muscle and Bones Strings]]
-*** [[file:~/Music/MuscleBone/include/events/extraMandB.sc][Muscle and Bone workspace]]
-** [[file:include/song_template.sc][Song Tem2plate]]
+** [[file:include/song_template.sc][Song Template]]
 
 * SuperCollider
 ** [[file:include/superInit.sc][SuperColliderInit]]
 ** [[file:include/setup.sc][Setup]]
 ** SynthDev
-*** [[file:~/Desktop/fmWorkspace.sc][FM Workspace]]
+*** [[file:~/Music/song9/include/synths/fmWorkspace.sc][FM Workspace]]
 *** [[file:include/synths/basic.sc][Basic SynthDef]]
 *** [[file:include/synths/evenVCO.sc][evenVCO]]
 **** [[file:include/synths/evenVCOmono.sc][evenVCOmono]]

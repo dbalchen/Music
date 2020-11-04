@@ -37,7 +37,7 @@ o.memSize = 2097152;
 )
 
 ~startup.value;
-~startTimer.value(60);
+~startTimer.value(3,120);
 
 ~track0.transport.play;
 ~track0.transport.stop;
@@ -80,4 +80,4 @@ o.memSize = 2097152;
 )
 
 
-~rp = {~start.value;};
+~rp = {{" Hello ".post;}};

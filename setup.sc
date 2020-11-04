@@ -34,9 +34,12 @@
 	~rp = {};
 
 	a = {
+		
 		arg beat;
 		var beat4 = (beat%4);
 		beat4.postln;
+
+		
 		if(beat % ~onbeat == 0, {
 			Routine.run({
 				s.sync;
