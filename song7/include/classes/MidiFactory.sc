@@ -2,7 +2,7 @@ MidiFactory {
 
     var <>midifile,<>timeSig, <>bpm, <>numerator, <>midipattern;
 
-    *new {arg fileRead;
+    *new {arg fileRead;625
 
         ^super.new.init(fileRead);
     }
@@ -84,7 +84,7 @@ MidiFactory {
 
         // Clean up zero waits
 
-		/*
+		
         hold = mynotes.waits.deepCopy;
 
         offset = 0;
@@ -103,7 +103,7 @@ MidiFactory {
             };);
 
         });
-		*/
+		
 		
         mynotes.numerator = numerator;
 

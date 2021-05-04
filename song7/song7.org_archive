@@ -1418,3 +1418,24 @@ SynthDef("formant", {
   :ARCHIVE_CATEGORY: song7
   :END:
 ** Key A Major
+
+* [[file:include/synths/eCello.sc][eCello]]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-12-13 Sun 15:37
+  :ARCHIVE_FILE: ~/Music/song7/song7.org
+  :ARCHIVE_OLPATH: SuperCollider/SynthDev
+  :ARCHIVE_CATEGORY: song7
+  :END:
+
+* [[file:~/Music/song9/include/harmonizer.sc][Harmonizer]]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-12-13 Sun 15:38
+  :ARCHIVE_FILE: ~/Music/song7/song7.org
+  :ARCHIVE_OLPATH: SuperCollider/Classes
+  :ARCHIVE_CATEGORY: song7
+  :END:
+/*
+
+
+
+

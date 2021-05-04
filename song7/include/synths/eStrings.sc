@@ -4,7 +4,7 @@
 // =====================================================================
 
 SynthDef("eStrings", {
-	arg ss, freq = 55, out = 0, amp = 1.0, lagtime = 0, da = 2, gate = 0,
+	arg ss, freq = 55, out = 0, amp = 0.50, lagtime = 0, da = 2, gate = 0,
 	idx = 0.2,hpf = 200,bend = 0,sinamp = 0.35, sawamp = 0.65,
 	attack = 1.5, decay = 2.5, sustain = 0.4, release = 0.75,
 	fattack = 1.5, fdecay = 2.5,fsustain = 0.4, frelease = 0.75,

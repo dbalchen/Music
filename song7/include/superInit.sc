@@ -1,6 +1,9 @@
 Help.gui
 Quarks.gui
 
+Server.supernova
+Server.scsynth
+
 s.boot;
 s.plotTree;
 s.meter;

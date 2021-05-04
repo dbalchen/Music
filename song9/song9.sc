@@ -22,8 +22,7 @@ Server.default.makeGui;
 ~mytrack3.noteON = ~evenVCOpoly2;
 
 ~mytrack4 = Track.new(~out0,3);
-~mytrack4.noteON = ~evenVCOpoly;
-
+~mytrack4.noteON = ~channel0;//~frenchHorn; //~evenVCOpoly;
 
 ~mytrack10 = Track.new(~out1,9);
 
@@ -52,7 +51,7 @@ t = TempoClock.default.tempo = 90/60;
 
 ~t0 = [0,2,4,5,7,9,10];
 
-~mynotes = ~midiFactory.getTrack(0,1);
+~mynotes = ~midiFactory.getTrack(0,5);
 
 ~ff0 = ~mynotes.freqs.deepCopy;
 
@@ -67,6 +66,8 @@ t = TempoClock.default.tempo = 90/60;
 ~mynotes.freqs = ~f0;
 
 ~mytrack.notes = ~mynotes.init;
+
+~mytrack.transport.play;
 
 ~mytrack.transport.mute;
 

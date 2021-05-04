@@ -6,7 +6,7 @@
 
 
 SynthDef("evenVCO", {
-    arg ss, freq = 55, out = 0, amp = 1, lagtime = 0, da = 2, gate = 0,
+    arg ss, freq = 220, out = 0, amp = 1, lagtime = 0, da = 2, gate = 0,
     idx = 0.2,hpf = 120, bend = 0,
     attack = 1.5, decay = 2.5, sustain = 0.4, release = 0.75,
     fattack = 1.5, fdecay = 2.5,fsustain = 0.4, frelease = 0.75,
@@ -22,7 +22,7 @@ SynthDef("evenVCO", {
     fenv = aoc*(fenv - 1) + 1;
 
     freq = Lag.kr(freq,lagtime);
-    freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!4;
+    freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!16;
 
 	 sig = VOsc.ar(ss+idx,freq,0,mul:env*amp);
 
@@ -37,11 +37,10 @@ SynthDef("evenVCO", {
 
     sig = HPF.ar(sig,hpf);
 
-	sig = Splay.ar(sig,spread,center:balance);
-    sig = FreeVerb.ar(sig);
-
-	sig = LeakDC.ar(sig);
-    Out.ar(out,sig * amp);
+	//	sig = Splay.ar(sig,spread,center:balance);
+	sig = FreeVerb.ar(sig);
+	sig = LeakDC.ar(sig) * amp;
+    Out.ar(out,sig.dup);
 
 }).send(s);
 
@@ -49,7 +48,7 @@ SynthDef("evenVCO", {
 
 
 SynthDef("evenVCO2", {
-    arg freq = 55, out = 0, amp = 0.5, lagtime = 0, da = 2, gate = 0,
+    arg freq = 220, out = 0, amp = 0.5, lagtime = 0, da = 2, gate = 0,
     idx = 0.2,hpf = 45, bend = 0,
     attack = 1.5, decay = 2.5, sustain = 0.4, release = 0.75,
     fattack = 1.5, fdecay = 2.5,fsustain = 0.4, frelease = 0.75,
@@ -65,18 +64,12 @@ SynthDef("evenVCO2", {
     fenv = aoc*(fenv - 1) + 1;
 
     freq = Lag.kr(freq,lagtime);
-	freq2 = freq;
-	
-    freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!4;
-	/*	
-	sig =  SinOsc.ar(freq,0,mul:0.15);
-	
-	sig = (0.8*sig) + ((Saw.ar(freq,mul:0.2)));
-	
-	sig = sig + ((Saw.ar(2*freq,mul:0.55)));
-	*/	
 
-	sig = 2*(0.55*SinOsc.ar(freq,0) + 0.5*Saw.ar(freq));
+	freq = 1.5*SinOsc.kr(8) + freq;
+	
+    freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!16;
+
+	sig = (0.35*SinOsc.ar(freq,0) + 0.5*Saw.ar(freq));
 	
     sig = MoogFF.ar(
     
@@ -107,7 +100,7 @@ SynthDef("evenVCO2", {
 
 ~wavetables.free;
 
-~wavetables = ~fileList.value("/home/dbalchen/Music/song7/include/samples/eVCO");
+~wavetables = ~fileList.value("/home/dbalchen/Music/song7/include/samples/eVCO/");
 
 ~windex = ~wavetables.size;
 
@@ -158,14 +151,13 @@ SynthDef("evenVCO2", {
 
     ret.set(\out,out);
     ret.set(\gate,1);
-    ret.set(\cutoff,9000);
+    ret.set(\cutoff,7000);
     ret.set(\gain,0.85);
-    ret.set(\aoc,1.0);
+    ret.set(\aoc,0.7);
     ret.set(\hpf,25);
     vel = (vel/127)*0.40;
-    ret.set(\amp,0.15);
+    ret.set(\amp,1.0);
     ret;
 };
-
 
 

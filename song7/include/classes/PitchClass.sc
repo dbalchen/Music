@@ -46,6 +46,7 @@
 
 
 	mapEnv = Env.new(mapfreqs,mapwaits,\sine);
+	
 	mapfreqs.postln;
 	mapwaits.postln;
 
@@ -68,6 +69,7 @@
 		});
 		point = point + noteSeq.waits.at(i);
 	});
+	`
 	noteSeq;
 };
 

@@ -8,11 +8,12 @@
 ** [[file:include/superInit.sc][SuperColliderInit]]
 ** [[file:include/setup.sc][Setup]]
 ** SynthDev
+*** [[file:~/Music/song9/include/synths/dynOsc.sc][dynOsc]]
+*** [[file:~/Music/song9/include/samples/MoogWaves][Moog Samples]]
 *** [[file:~/Music/song9/include/synths/fmWorkspace.sc][FM Workspace]]
 *** [[file:include/synths/basic.sc][Basic SynthDef]]
 *** [[file:include/synths/evenVCO.sc][evenVCO]]
 **** [[file:include/synths/evenVCOmono.sc][evenVCOmono]]
-*** [[file:include/synths/eCello.sc][eCello]]
 *** [[file:include/synths/eStrings.sc][eStrings]]
 *** [[file:include/synths/eSampler.sc][eSampler]]
 *** [[file:include/synths/kick.sc][Kick Drum]]
@@ -25,9 +26,3 @@
 *** [[file:include/classes/PitchClass.sc][PitchClass]]
 **** Interval Addition
 **** melodicContour
-*** [[file:~/Music/song9/include/harmonizer.sc][Harmonizer]]
-/*
-
-
-
-

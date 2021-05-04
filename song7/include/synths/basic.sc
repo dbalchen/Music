@@ -31,6 +31,45 @@ SynthDef("basicSynth", { arg freq = 55, out = 0, amp = 0.75, da = 2, gate = 0,
 };
 
 
+SynthDef("basicSynthW", { arg ss = 0, freq = 55, out = 0, amp = 0.75, da = 2, gate = 0,
+	attack = 1.5, decay = 2.5, sustain = 0.4, release = 0.5,
+	spread = 1, balance = 0, hpf = 128;
+
+
+	var sig, env;
+
+	env = Env.adsr(attack,decay,sustain,release);
+	env = EnvGen.kr(env, gate: gate, doneAction:da);
+
+	sig = Osc.ar(ss,freq,0,mul:env*amp);
+
+	sig = HPF.ar(sig,hpf);
+
+	sig = LeakDC.ar(sig);
+
+	sig = Splay.ar(sig,spread,center:balance);
+
+	Out.ar(out,sig * (env*amp));
+
+}).store;
+
+
+"/home/dbalchen/workspace/SuperCollider/makeWaveTable.sc".load;
+
+~wavebuff =  ~makeWav.value("/home/dbalchen/Music/song9/include/samples/MoogWaves/02-pulse.wav");
+
+~channel0w = {arg num, vel = 1;
+	var ret;
+	num.postln;
+	ret = Synth("basicSynthW");
+	ret.set(\ss,~wavebuff);
+	ret.set(\freq,num.midicps);
+	ret.set(\gate,1);
+	ret;
+};
+
+
+
 
 SynthDef("basicOsc", { arg freq = 55, out = 0, bend = 0, lagtime = 0.25;
 	var sig;
