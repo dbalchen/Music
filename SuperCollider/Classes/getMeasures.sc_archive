@@ -1,0 +1,68 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/dbalchen/Desktop/getMeasures.sc
+
+
+* Archive this 
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-03-14 Sat 22:07
+  :ARCHIVE_FILE: ~/Desktop/getMeasures.sc
+  :ARCHIVE_CATEGORY: getMeasures
+  :END:
+
+
+//////// Remove 0 waits
+
+~hold = ~mynotes.waits.deepCopy;
+
+~offset = 0;
+
+~hold.do ({arg item,i;
+
+
+	if(item == 0,{
+		
+		~mynotes.waits.removeAt(i-~offset);
+		~mynotes.vels.removeAt(i-~offset);
+		~mynotes.freqs.removeAt(i-~offset);
+		~mynotes.durations.removeAt(i-~offset);
+		~mynotes.lags.removeAt(i-~offset);
+		~mynotes.probs.removeAt(i-~offset);
+		
+		~offset = ~offset + 1;
+		
+	};);
+
+});
+
+
+
+* Midi Set up for testing
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2020-03-21 Sat 18:14
+  :ARCHIVE_FILE: ~/Music/song7/include/classes/getMeasures.sc
+  :ARCHIVE_CATEGORY: getMeasures
+  :END:
+*/
+~midiFactory = MidiFactory.new("/home/dbalchen/Desktop/MandD.mid");
+
+~mynotes = ~midiFactory.getTrack(0);
+
+~mynotes.numerator;
+
+~mynotes.freqs;
+
+~mynotes.waits;
+
+~mynotes.durations;
+
+~mynotes.vels;
+
+~mynotes.probs;
+
+~mynotes.lags;
+
+~mynotes.realtime;
+
+/*
