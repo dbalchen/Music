@@ -8,7 +8,7 @@
 ** [[file:include/superInit.sc][SuperColliderInit]]
 ** [[file:include/setup.sc][Setup]]
 ** SynthDev
-*** [[file:~/Music/song9/include/synths/dynOsc.sc][dynOsc]]
+*** [[file:include/Synths/dynOsc.sc][DynOsc]]
 *** [[file:~/Music/song9/include/samples/MoogWaves][Moog Samples]]
 *** [[file:~/Music/song9/include/synths/fmWorkspace.sc][FM Workspace]]
 *** [[file:include/synths/basic.sc][Basic SynthDef]]
