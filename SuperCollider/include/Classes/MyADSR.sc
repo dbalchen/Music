@@ -1,9 +1,6 @@
 MyADSR {
 
-	var <>name, <>attack, <>release, <>decay, <>sustain,
-	<>attacks, //<>releases,
-	<>decays,
-	<>att,<>rel,<>dec;
+	var <>name, <>attack, <>release, <>decay, <>sustain, <>attacks, <>decays, <>att, <>rel, <>dec;
 
 	*new {arg at = 0.5, dc = 0.0, ss = 1.0, re = 0.5, nme = "My Adsr";
 		^super.new.init(at, dc, ss, re, nme);
@@ -20,14 +17,10 @@ MyADSR {
 		if(attacks == nil,
 			{attacks = [1.0];});
 
-		if(releases == nil,
-			{releases = [1.0];});
-
 		if(decays == nil,
 			{decays = [1.0];});
 
 		this.calcAttack.value;
-		this.calcRelease.value;
 		this.calcDecay.value;
 	}
 
@@ -67,17 +60,6 @@ MyADSR {
 
 		att = Pn(lazy,inf).asStream;
 	}
-
-	// calcRelease {
-	// 	var lazy;
-	//
-	// 	lazy = Plazy({
-	// 		Pseq(releases,1);
-	// 	});
-	//
-	// 	rel = Pn(lazy,inf).asStream;
-	// }
-	//
 
 	calcDecay {
 		var lazy;

@@ -149,18 +149,23 @@ Notes {
 
     }
 
-	
+
 	rotate {arg how_many = 0;
 
-		freqs = freqs.rotate(how_many);
-		probs = probs.rotate(how_many);
-		waits = waits.rotate(how_many);
-		durations = durations.rotate(how_many);
-		lags = lags.rotate(how_many);
-		vels = vel.rotate(how_many);
+		var myNotes = Notes.new;
 
-		^this;
-	
+		myNotes.freqs = (freqs.deepCopy).rotate(how_many);
+		myNotes.probs = (probs.deepCopy).rotate(how_many);
+		myNotes.waits = (waits.deepCopy).rotate(how_many);
+		myNotes.durations = (durations.deepCopy).rotate(how_many);
+		myNotes.lags = (lags.deepCopy).rotate(how_many);
+		myNotes.vels = (vels.deepCopy).rotate(how_many);
+
+		myNotes.numerator = numerator;
+        myNotes = myNotes.init;
+
+		^myNotes;
+
 	}
 }
 

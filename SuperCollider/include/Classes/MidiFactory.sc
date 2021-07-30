@@ -26,7 +26,7 @@ MidiFactory {
         var trk, mynotes,endif, offset, hold;
 
         trk = midipattern.select({arg item,i;item.at('chan') == channel});
-		
+
 
         mynotes = Notes.new;
 
@@ -68,43 +68,6 @@ MidiFactory {
 
 		mynotes.waits = mynotes.waits.put(	mynotes.waits.size - 1 ,endif);
 
-		/*
-        endif = (midifile.noteOffEvents(channel, trackNumber).last)[1];
-
-        endif = endif/midifile.division;
-
-        endif = endif%numerator;
-
-        if(endif != 0,{	endif = (numerator - endif);});
-
-        endif =  endif + mynotes.durations.last;
-
-        mynotes.waits = mynotes.waits.put(	mynotes.waits.size - 1 ,endif);
-		*/
-
-        // Clean up zero waits
-
-		
-        hold = mynotes.waits.deepCopy;
-
-        offset = 0;
-
-        hold.do ({arg item,i;
-
-
-            if(item == 0,{
-
-                mynotes.waits.removeAt(i-offset);
-                mynotes.vels.removeAt(i-offset);
-                mynotes.freqs.removeAt(i-offset);
-                mynotes.durations.removeAt(i-offset);
-                offset = offset + 1;
-
-            };);
-
-        });
-		
-		
         mynotes.numerator = numerator;
 
         mynotes = mynotes.init;
