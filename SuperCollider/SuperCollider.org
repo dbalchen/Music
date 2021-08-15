@@ -11,18 +11,18 @@
 *** [[file:include/Synths/dynOsc.sc][DynOsc]]
 *** [[file:~/Music/song9/include/samples/MoogWaves][Moog Samples]]
 *** [[file:~/Music/song9/include/synths/fmWorkspace.sc][FM Workspace]]
-*** [[file:include/synths/basic.sc][Basic SynthDef]]
-*** [[file:include/synths/evenVCO.sc][evenVCO]]
-**** [[file:include/synths/evenVCOmono.sc][evenVCOmono]]
-*** [[file:include/synths/eStrings.sc][eStrings]]
-*** [[file:include/synths/eSampler.sc][eSampler]]
-*** [[file:include/synths/kick.sc][Kick Drum]]
+*** [[file:include/Synths/basic.sc][Basic Synth]]
+*** [[file:include/Synths/evenVCO.sc][evenVCO]]
+**** [[file:include/Synths/evenVCOmono.sc][evenVCO (Mono)]]
+*** [[file:include/Synths/eStrings.sc][eStrings]]
+*** [[file:include/Synths/eSampler.sc][eSampler]]
+*** [[file:include/Synths/kick.sc][Kick]]
 ** Classes
-*** [[file:include/classes/MidiFactory.sc][MidiFactory]]
-*** [[file:include/classes/Track.sc][Track Class]]
-*** [[file:include/classes/Notes.sc][Notes]]
-**** [[file:include/classes/getMeasures.sc][Get Measures function]]
+*** [[file:include/Classes/MidiFactory.sc][MidiFactory]]
+*** [[file:include/Classes/Track.sc][Track]]
+*** [[file:include/Classes/Notes.sc][Notes]]
+**** [[file:include/functions/getMeasures.sc][getMeasures.sc]]
 **** ADD/Merge Note
-*** [[file:include/classes/PitchClass.sc][PitchClass]]
-**** Interval Addition
-**** melodicContour
+**** [[file:include/functions/PitchClass.sc][PitchClass]]
+***** Interval Addition
+****** melodicContour

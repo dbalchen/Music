@@ -46,8 +46,17 @@
 	sig;
 };
 
+
+~dfm1Filter = {
+	arg sig, env, cutoff = 12000, gain = 0.25 ;
+
+	sig = DFM1.ar(sig,cutoff*env, gain);
+
+	sig;
+};
+
 ~dynOsc = {
-	arg name = "nbasicSynth", adsr = ~adsr, fdsr = ~fadsr, osc = ~evenVCO, filter = ~moogFilter;
+	arg name = "nbasicSynth", adsr = ~adsr, fdsr = ~fadsr, osc = ~evenVCO, filter = ~dfm1Filter;
 
 	SynthDef(name, {
 		arg	out = 0, amp = 1.0, spread = 1, balance = 0, gate = 0, hpf = 128;
@@ -76,7 +85,7 @@
 ~vcf = MyADSR.new(0.5,0.50,0.7,0.6,"VCF");
 
 ~playDyno = {arg num, vel = 1,src,out = 0, synth = "nbasicSynth", vca = ~vca, vcf = ~vcf;
-	var ret
+	var ret;
 
 	ret = Synth(synth);
 	vel = (vel/127);
@@ -86,7 +95,7 @@
 	vca.setADSR(ret);
 	ret.set(\freq,num.midicps);
 	ret.set(\voc,1.0);
-	ret.set(\lagtime.0);
+	ret.set(\lagtime,0);
 	ret.set(\bend,0);
 
 	vcf.setfADSR(ret);
@@ -99,3 +108,16 @@
 
 	ret;
 };
+
+/*
+
+~dynOsc.value;
+
+~ret = Synth("nbasicSynth");
+~ret.set(\gate,1);
+~ret.set(\gate,0);
+
+~mytrack = Track.new(~out0,0);
+~mytrack.noteON = ~playDyno;
+
+*/
