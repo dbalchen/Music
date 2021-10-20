@@ -56,7 +56,7 @@
 };
 
 ~dynOsc = {
-	arg name = "nbasicSynth", adsr = ~adsr, fdsr = ~fadsr, osc = ~evenVCO, filter = ~dfm1Filter;
+	arg name = "nbasicSynth", adsr = ~adsr, fdsr = ~fadsr, osc = ~evenVCO, filter = ~moogFilter;
 
 	SynthDef(name, {
 		arg	out = 0, amp = 1.0, spread = 1, balance = 0, gate = 0, hpf = 128;
@@ -94,13 +94,15 @@
 
 	vca.setADSR(ret);
 	ret.set(\freq,num.midicps);
+	ret.set(\midinum,num);
+
 	ret.set(\voc,1.0);
 	ret.set(\lagtime,0);
 	ret.set(\bend,0);
 
 	vcf.setfADSR(ret);
 	ret.set(\cutoff,10000);
-	ret.set(\gain,0.7);
+	ret.set(\gain,1.2);
 	ret.set(\aoc,1.0);
 
 	ret.set(\hpf,32.5);

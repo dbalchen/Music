@@ -1,71 +1,107 @@
+/*
+* SC Setup
+*/
 Server.default.makeGui;
 
-"/home/dbalchen/Music/song7/include/setup.sc".load;
+"/home/dbalchen/Music/SuperCollider/include/setup.sc".load;
 
-"/home/dbalchen/Music/song7/include/classes/PitchClass.sc".load;
-"/home/dbalchen/Music/song7/include/classes/getMeasures.sc".load;
+// Pitch Libraries
+
+"/home/dbalchen/Music/SuperCollider/include/functions/PitchClass.sc".load;
+"/home/dbalchen/Music/SuperCollider/include/functions/getMeasures.sc".load;
 
 /*
 * Instrument Setup
-*/
 
-"/home/dbalchen/Music/song7/include/synths/evenVCO.sc".load;
+//  Set up synth
 
+"/home/dbalchen/Music/SuperCollider/include/Synths/dynOsc.sc".load;
 
-~mytrack = Track.new(~out0,0);
-~mytrack.noteON =~evenVCOpoly;
+~dynOsc.value;
 
-~mytrack2 = Track.new(~out0,1);
-~mytrack2.noteON = ~evenVCOpoly2;
-
-~mytrack3 = Track.new(~out0,2);
-~mytrack3.noteON = ~evenVCOpoly2;
-
-~mytrack4 = Track.new(~out0,3);
-~mytrack4.noteON = ~channel0;//~frenchHorn; //~evenVCOpoly;
-
-~mytrack10 = Track.new(~out1,9);
-
-//
 ~vca.gui;
 ~vcf.gui;
-//
-
-
-// I see shit here
-~bassbuff = Buffer.read(s, "/home/dbalchen/Music/song9/include/audio/bass.wav");
-~loop = {arg audio,amp = 0.25;amp*PlayBuf.ar(2,~bassbuff,loop:1)};
-
-~loop.free;
-~bassbuff.free;
-
-/*
-** The Song
 */
 
+/*
+* The Song
+*/
+
+// Tempo
 t = TempoClock.default.tempo = 90/60;
 
+// Read Midi
 ~midiFactory = MidiFactory.new("/home/dbalchen/Desktop/song9.mid");
 
-// Track 1
 
-~t0 = [0,2,4,5,7,9,10];
+/*
+* Track 1
+*/
 
-~mynotes = ~midiFactory.getTrack(0,5);
+~mytrack = Track.new(~out0,0);
+
+/*
+~mytrack.noteON = ~playDyno;
+*/
+
+// Get track 1
+
+~mynotes = (~midiFactory.getTrack(0,2)).remove0waits;
+
+~mynotes = ~mynotes.init;
 
 ~ff0 = ~mynotes.freqs.deepCopy;
 
+/*
+**  Play with Pitches
+*/
+
+// Pitch Classes
+
+~t0 =  [0,2,4,4,5,7,9,11];
+// ~t1 =  [ 0.0, 1.0, 2.0, 4.0, 5.0, 7.0, 9.0, 10.0, 11.0 ];
+~t1 = [ 0.0, 1.0, 3.0, 4.0, 5.0, 7.0, 9.0, 11.0 ]
+
+~t0 =  [0,2,2,4,5,7,9,9,11];
+~t1 = [ 0.0, 2.0, 3.0, 5.0, 7.0, 8.0, 9.0, 10.0, 11.0 ];
+
+//~t1 = [2,4,5,7,9,11,0];
+
+
+
+
 ~f0 = ~ff0.deepCopy;
 
-~f0 = ~pitchClassTI.value(~f0,5) + 60;
-
-~t1 = ~pcset.value(~pitchClassTI.value(~t0 + 12,5));
+~t1 = ~pitchClassT.value(~t0 + 12,2);
 
 ~f0 = ~pitchMap.value(~f0,~t1,~t0);
 
-~mynotes.freqs = ~f0;
+
+~f0 = ~mynotesT.freqs.deepCopy;
+
+~pcset.value(~f0);
+
+~mynotesT.freqs = ~f0 - 12;
+
+
+/*
+** Play with Rhythm
+*/
+
+/*
+** Load and play
+*/
+
 
 ~mytrack.notes = ~mynotes.init;
+
+~mytrack.notes = ~mynotesT.init;
+
+~mytrack10.notes = ~mynotes10.init;
+
+~mynotesT = ~invAdd.value(~mynotes,~mynotes2,9);
+
+
 
 ~mytrack.transport.play;
 
@@ -74,27 +110,26 @@ t = TempoClock.default.tempo = 90/60;
 ~mytrack.transport.unmute;
 
 
+/*
+* Track 2
+*/
 
-// Track 2
+~mytrack2 = Track.new(~out0,1);
 
-~mynotes2 = ~midiFactory.getTrack(1,2);
+~mynotes2 = ~midiFactory.getTrack(1,3).remove0waits;
 
-~f2 = ~mynotes2.freqs.deepCopy;
+~mynotes2 = ~mynotes2.init;
 
-// -----------------
-~mynotes2 = ~mynotes.deepCopy;
+~mynotes2.freqs;
 
-~f2  = ~f0.copy;
 
-~f2 = ~pitchClassT.value(~f2,7) + 60;
-
-~t2 = ~pcset.value(~pitchClassT.value(~t0 + 12,7));
-
-~f2 = ~pitchMap.value(~f2,~t2,~t0);
-
-~mynotes2.freqs = ~f2;
+/*
+** Load and play
+*/
 
 ~mytrack2.notes = ~mynotes2.init;
+
+~mytrack2.transport.play;
 
 ~mytrack2.transport.mute;
 
@@ -102,62 +137,24 @@ t = TempoClock.default.tempo = 90/60;
 
 
 
-// Track 3
-
-~mynotes3 = ~midiFactory.getTrack(2,5);
-~f3 = ~mynotes3.freqs.deepCopy;
 
 
-~mynotes3 = ~mynotes.deepCopy;
+/*
+* Track 10
+*/
 
-~f3  = ~f0.copy;
+~mytrack10 = Track.new(~out0,9);
 
-~f3 = ~pitchClassT.value(~f3,5) + 48;
+~mynotes10 = ~midiFactory.getTrack(9,1);
+~mynotes10 = ~mynotes10.remove0waits;
 
-~t3 = ~pcset.value(~pitchClassT.value(~t0 + 12,5));
-
-~f3 = ~pitchMap.value(~f3,~t3,~t0);
-
-
-~mynotes3.freqs = ~f3;
-
-~mytrack3.notes = ~mynotes3.init;
-
-~mytrack3.transport.mute;
-
-~mytrack3.transport.unmute;
-
-// Track 4
-
-~mynotes4 = ~midiFactory.getTrack(3,3);
-~f4 = ~mynotes4.freqs.deepCopy;
-
-
-~mynotes4 = ~mynotes.deepCopy;
-
-~f4  = ~f0.copy;
-
-~f4 = ~pitchClassTI.value(~f4,2) + 72;
-
-~t4 = ~pcset.value(~pitchClassTI.value(~t0 + 12,2));
-
-~f4 = ~pitchMap.value(~f4,~t4,~t0);
-
-
-~mynotes4.freqs = ~f4;
-
-~mytrack4.notes = ~mynotes4.init;
-
-~mytrack4.transport.mute;
-
-~mytrack4.transport.unmute;
-
-
-// Track 10
-
-~mynotes10 = ~midiFactory.getTrack(9,4);
+/*
+** Load and play
+*/
 
 ~mytrack10.notes = ~mynotes10.init;
+
+~mytrack10.transport.play;
 
 ~mytrack10.transport.mute;
 
@@ -165,24 +162,14 @@ t = TempoClock.default.tempo = 90/60;
 
 
 
+/*
+* Transport
+*/
 
 ~startTimer.value(90);
 
-~rp = {~mytrack.transport.play;};
-~rp = {~mytrack.transport.play;~mytrack2.transport.play;~mytrack3.transport.play;~mytrack4.transport.play;~loop = ~loop.play;~mytrack10.transport.play;};
+~rp = {~mytrack.transport.play;~mytrac10.transport.play;~mytrack2.transport.play;};
 
-~rp = {~mytrack2.transport.play;};
-~rp = {~mytrack3.transport.play;};
-
-~rp = {~mytrack4.transport.play;};
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-~mytrack.transport.play;~mytrack2.transport.play;~mytrack3.transport.play;~mytrack4.transport.play;~loop = ~loop.play;~mytrack10.transport.play;
-
-~mytrack.transport.mute;~mytrack2.transport.mute;~mytrack3.transport.mute;~mytrack4.transport.mute;~mytrack10.transport.mute;
-
-~mytrack.transport.unmute;~mytrack2.transport.unmute;~mytrack3.transport.unmute;~mytrack10.transport.unmute;
-
-~mytrack.transport.stop;~mytrack2.transport.stop;~mytrack3.transport.stop;~mytrack10.transport.stop;
+~mytrack.transport.play;~mytrack10.transport.play;~mytrack2.transport.play;
+~mytrack.transport.stop;~mytrack10.transport.stop;~mytrack2.transport.stop;
 

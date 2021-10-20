@@ -1,0 +1,155 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/dbalchen/Music/song9/song9.sc
+
+
+* Play Audio clip
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-09 Sat 08:17
+  :ARCHIVE_FILE: ~/Music/song9/song9.sc
+  :ARCHIVE_CATEGORY: song9
+  :END:
+~bassbuff = Buffer.read(s, "/home/dbalchen/Music/song9/include/audio/bass.wav");
+~loop = {arg audio,amp = 0.25;amp*PlayBuf.ar(2,~bassbuff,loop:1)};
+
+~loop.free;
+~bassbuff.free;
+
+/*
+
+Archived entries from file /home/dbalchen/Music/song9/song9.sc
+
+
+* Extra Tracks
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-09 Sat 08:17
+  :ARCHIVE_FILE: ~/Music/song9/song9.sc
+  :ARCHIVE_CATEGORY: song9
+  :END:
+~mytrack3 = Track.new(~out0,2);
+
+~mytrack4 = Track.new(~out0,3);
+
+~mytrack10 = Track.new(~out1,9);
+
+
+/*
+
+Archived entries from file /home/dbalchen/Music/song9/song9.sc
+
+
+* Extra Tracks
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-09 Sat 08:23
+  :ARCHIVE_FILE: ~/Music/song9/song9.sc
+  :ARCHIVE_OLPATH: The Song
+  :ARCHIVE_CATEGORY: song9
+  :END:
+
+// Track 2
+
+~mynotes2 = ~midiFactory.getTrack(1,2);
+
+~f2 = ~mynotes2.freqs.deepCopy;
+
+// -----------------
+~mynotes2 = ~mynotes.deepCopy;
+
+~f2  = ~f0.copy;
+
+~f2 = ~pitchClassT.value(~f2,7) + 60;
+
+~t2 = ~pcset.value(~pitchClassT.value(~t0 + 12,7));
+
+~f2 = ~pitchMap.value(~f2,~t2,~t0);
+
+~mynotes2.freqs = ~f2;
+
+~mytrack2.notes = ~mynotes2.init;
+
+~mytrack2.transport.mute;
+
+~mytrack2.transport.unmute;
+
+
+
+// Track 3
+
+~mynotes3 = ~midiFactory.getTrack(2,5);
+~f3 = ~mynotes3.freqs.deepCopy;
+
+
+~mynotes3 = ~mynotes.deepCopy;
+
+~f3  = ~f0.copy;
+
+~f3 = ~pitchClassT.value(~f3,5) + 48;
+
+~t3 = ~pcset.value(~pitchClassT.value(~t0 + 12,5));
+
+~f3 = ~pitchMap.value(~f3,~t3,~t0);
+
+
+~mynotes3.freqs = ~f3;
+
+~mytrack3.notes = ~mynotes3.init;
+
+~mytrack3.transport.mute;
+
+~mytrack3.transport.unmute;
+
+// Track 4
+
+~mynotes4 = ~midiFactory.getTrack(3,3);
+~f4 = ~mynotes4.freqs.deepCopy;
+
+
+~mynotes4 = ~mynotes.deepCopy;
+
+~f4  = ~f0.copy;
+
+~f4 = ~pitchClassTI.value(~f4,2) + 72;
+
+~t4 = ~pcset.value(~pitchClassTI.value(~t0 + 12,2));
+
+~f4 = ~pitchMap.value(~f4,~t4,~t0);
+
+
+~mynotes4.freqs = ~f4;
+
+~mytrack4.notes = ~mynotes4.init;
+
+~mytrack4.transport.mute;
+
+~mytrack4.transport.unmute;
+
+/*
+
+Archived entries from file /home/dbalchen/Music/song9/song9.sc
+
+
+* Extra transport
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-09 Sat 08:37
+  :ARCHIVE_FILE: ~/Music/song9/song9.sc
+  :ARCHIVE_OLPATH: Transport
+  :ARCHIVE_CATEGORY: song9
+  :END:
+~rp = {~mytrack.transport.play;~mytrack2.transport.play;~mytrack3.transport.play;~mytrack4.transport.play;~loop = ~loop.play;~mytrack10.transport.play;};
+
+~rp = {~mytrack2.transport.play;};
+~rp = {~mytrack3.transport.play;};
+
+~rp = {~mytrack4.transport.play;};
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+~mytrack.transport.play;~mytrack2.transport.play;~mytrack3.transport.play;~mytrack4.transport.play;~loop = ~loop.play;~mytrack10.transport.play;
+
+~mytrack.transport.mute;~mytrack2.transport.mute;~mytrack3.transport.mute;~mytrack4.transport.mute;~mytrack10.transport.mute;
+
+~mytrack.transport.unmute;~mytrack2.transport.unmute;~mytrack3.transport.unmute;~mytrack10.transport.unmute;
+
+~mytrack.transport.stop;~mytrack2.transport.stop;~mytrack3.transport.stop;~mytrack10.transport.stop;
+

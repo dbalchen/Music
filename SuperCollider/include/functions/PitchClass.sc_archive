@@ -56,3 +56,121 @@ Archived entries from file /home/dbalchen/Music/song7/include/classes/PitchClass
 };
 
 /*
+
+* Harmony
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-10 Sun 16:44
+  :ARCHIVE_FILE: ~/Music/SuperCollider/include/functions/PitchClass.sc
+  :ARCHIVE_CATEGORY: PitchClass
+  :END:
+*/
+
+~harmony = {arg pitch,transpose,key = 0;
+
+	var pitches,pitches0,harmony;
+
+	pitches = ~pcset.value(pitch,key);
+
+	harmony = ~pitchClassT.value(pitch,transpose,key);
+
+	pitches0 = ~pcset.value(harmony,key);
+
+	harmony =  ~pitchMap.value(harmony,pitches0,pitches,key);
+
+};
+
+
+* Scale and transformations
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-10 Sun 16:45
+  :ARCHIVE_FILE: ~/Music/SuperCollider/include/functions/PitchClass.sc
+  :ARCHIVE_CATEGORY: PitchClass
+  :END:
+*/
+
+~createScale = {arg tonerow, key = 0;
+
+	var fullscale = [];
+
+	tonerow = tonerow + key;
+
+	for(-2,12,
+		{ arg i;
+			tonerow.do({arg item, ii;
+
+				var point;
+
+				point = item + (i*12);
+
+				if((point >=0) && (point <= 120),{
+
+					fullscale = fullscale.add(point);
+
+			};)});
+
+	});
+	fullscale.sort;
+};
+
+/*
+
+* Melodic Curve
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-10 Sun 16:45
+  :ARCHIVE_FILE: ~/Music/SuperCollider/include/functions/PitchClass.sc
+  :ARCHIVE_CATEGORY: PitchClass
+  :END:
+*/
+
+~melodicCurves = {arg noteSeq, tonerow,gap = 2;
+
+	var point = 0, mapEnv,mapfreqs = [], mapwaits = [];
+
+	for(0,noteSeq.freqs.size - 1,
+		{ arg i;
+			if(noteSeq.freqs.at(i)
+				>= 1,{
+
+					mapfreqs =	mapfreqs.add(noteSeq.freqs.at(i));
+					mapwaits =	mapwaits.add(noteSeq.durations.at(i));
+
+			});
+	});
+
+	mapfreqs =	mapfreqs.add(noteSeq.freqs.at(0));
+
+
+	mapEnv = Env.new(mapfreqs,mapwaits,\sine);
+
+	mapfreqs.postln;
+	mapwaits.postln;
+
+
+	mapEnv.plot;
+
+	noteSeq.freqs.do({ arg item, i;
+		var subtone;
+
+		if( item == 0,
+			{
+
+				subtone = tonerow.copyRange(tonerow.indexOfGreaterThan( mapEnv.at(point))
+					- gap,tonerow.indexOfGreaterThan( mapEnv.at(point))
+					+ (gap - 1));
+
+				noteSeq.freqs.put(i,subtone.choose);
+
+
+		});
+		point = point + noteSeq.waits.at(i);
+	});
+	`
+	noteSeq;
+};
+
+/*
+~tt = ~melCurves.value(~verse.notes,~tonerow);
+~tt.freqs;
+*/
+
+/*

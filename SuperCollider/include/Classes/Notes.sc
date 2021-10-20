@@ -5,149 +5,158 @@
 
 Notes {
 
-    var <>freqs = nil,    <>freq = nil,
-    <>probs = nil,        <>numerator = 4,
-    <>waits = nil,        <>wait = nil,
-    <>lag = 0.0,          <>lags = nil,
-    <>vel = 1,            <>vels = nil,
-    <>durations = nil,    <>duration = nil,
-    <>realtime = nil;
+	var <>freqs = nil,    <>freq = nil,
+	<>probs = nil,        <>numerator = 4,
+	<>waits = nil,        <>wait = nil,
+	<>lag = 0.0,          <>lags = nil,
+	<>vel = 1,            <>vels = nil,
+	<>durations = nil,    <>duration = nil,
+	<>realtime = nil;
 
-    init {
+	init {
 
-        if(freqs == nil,
-            {freqs = [60]; });
+		if(freqs == nil,
+			{freqs = [60]; });
 
-        if(probs == nil,
-            {probs = freqs.deepCopy.collect{|x| if(x == 0,{x = 0;},{x = 1;})}});
+		if(probs == nil,
+			{probs = freqs.deepCopy.collect{|x| if(x == 0,{x = 0;},{x = 1;})}});
 
-        if(waits == nil,
-            {waits = Array.newClear(freqs.size).fill(1); });
+		if(waits == nil,
+			{waits = Array.newClear(freqs.size).fill(1); });
 
-        if(durations == nil,
-            {durations = waits.deepCopy;});
+		if(durations == nil,
+			{durations = waits.deepCopy;});
 
-        if(vels == nil,
-            {vels = Array.newClear(freqs.size).fill(127); });
+		if(vels == nil,
+			{vels = Array.newClear(freqs.size).fill(127); });
 
-        if(lags == nil,
-            {lags = Array.newClear(freqs.size).fill(0); });
+		if(lags == nil,
+			{lags = Array.newClear(freqs.size).fill(0); });
 
-        waits.do({
-            arg item, i;
+		realtime = [];
+//		realtime = realtime.add(0.00);
 
-            if(i == 0,
-                {realtime = realtime.add(item);},
-                {realtime = realtime.add( realtime.at(i-1) + item);};
-            );
+		waits.do({
+			arg item, i;
 
-        });
+			if(i == 0,
+				{
+//					realtime = realtime.add(0.00);
+					realtime = realtime.add(item);
 
+				},
+				{
+			realtime = realtime.add( realtime.at(i-1) + item);
 
-        this.calcFreq.value;
-        this.calcDur.value;
-        this.calcWait.value;
-        this.calcLag.value;
-        this.calcVel.value;
+		};);
 
-    }
-
-
-    calcFreq {
-
-        var lazy;
-
-        lazy = Plazy({
-
-            var ary,flip,fre;
-
-            if(freqs.size >= probs.size,
-                {ary = Array.newClear(freqs.size);},
-                {ary = Array.newClear(probs.size);}
-            );
+		});
 
 
-            ary.do({ arg item, i;
+		this.calcFreq.value;
+		this.calcDur.value;
+		this.calcWait.value;
+		this.calcLag.value;
+		this.calcVel.value;
 
-                flip =  rrand(0.0, 1.0);
-
-                if(probs.at(i%probs.size) >= flip,
-                    {ary.put(i,1);},
-                    {ary.put(i,0);}
-                );
-
-            });
+	}
 
 
-            fre = freqs*ary;
+	calcFreq {
 
-            fre.do({ arg item, i;
+		var lazy;
 
-                if(item.isKindOf(Array),
-                    {
-                        if(item.at(0) == 0,{fre.put(i,\rest)};);
-                });
+		lazy = Plazy({
 
-                if(item == 0,{fre.put(i,\rest);});
+			var ary,flip,fre;
 
-            });
-
-            Pseq(fre,1);
-
-        });
+			if(freqs.size >= probs.size,
+				{ary = Array.newClear(freqs.size);},
+				{ary = Array.newClear(probs.size);}
+			);
 
 
-        freq = Pn(lazy,inf).asStream;
-    }
+			ary.do({ arg item, i;
+
+				flip =  rrand(0.0, 1.0);
+
+				if(probs.at(i%probs.size) >= flip,
+					{ary.put(i,1);},
+					{ary.put(i,0);}
+				);
+
+			});
 
 
-    calcDur {
+			fre = freqs*ary;
 
-        var lazy;
+			fre.do({ arg item, i;
 
-        lazy = Plazy({
-            Pseq(durations,1);
-        });
+				if(item.isKindOf(Array),
+					{
+						if(item.at(0) == 0,{fre.put(i,\rest)};);
+				});
 
-        duration = Pn(lazy,inf).asStream;
+				if(item == 0,{fre.put(i,\rest);});
 
-    }
+			});
 
+			Pseq(fre,1);
 
-    calcWait {
-        var lazy;
-
-        lazy = Plazy({
-            Pseq(waits,1);
-        });
-
-        wait =Pn(lazy,inf).asStream;
-
-    }
+		});
 
 
-    calcLag {
-        var lazy;
-
-        lazy = Plazy({
-            Pseq(lags,1);
-        });
-
-        lag =Pn(lazy,inf).asStream;
-
-    }
+		freq = Pn(lazy,inf).asStream;
+	}
 
 
-    calcVel {
-        var lazy;
+	calcDur {
 
-        lazy = Plazy({
-            Pseq(vels,1);
-        });
+		var lazy;
 
-        vel =Pn(lazy,inf).asStream;
+		lazy = Plazy({
+			Pseq(durations,1);
+		});
 
-    }
+		duration = Pn(lazy,inf).asStream;
+
+	}
+
+
+	calcWait {
+		var lazy;
+
+		lazy = Plazy({
+			Pseq(waits,1);
+		});
+
+		wait =Pn(lazy,inf).asStream;
+
+	}
+
+
+	calcLag {
+		var lazy;
+
+		lazy = Plazy({
+			Pseq(lags,1);
+		});
+
+		lag =Pn(lazy,inf).asStream;
+
+	}
+
+
+	calcVel {
+		var lazy;
+
+		lazy = Plazy({
+			Pseq(vels,1);
+		});
+
+		vel =Pn(lazy,inf).asStream;
+
+	}
 
 
 	rotate {arg how_many = 0;
@@ -155,17 +164,75 @@ Notes {
 		var myNotes = Notes.new;
 
 		myNotes.freqs = (freqs.deepCopy).rotate(how_many);
+
 		myNotes.probs = (probs.deepCopy).rotate(how_many);
+
 		myNotes.waits = (waits.deepCopy).rotate(how_many);
+
 		myNotes.durations = (durations.deepCopy).rotate(how_many);
+
 		myNotes.lags = (lags.deepCopy).rotate(how_many);
+
 		myNotes.vels = (vels.deepCopy).rotate(how_many);
 
 		myNotes.numerator = numerator;
-        myNotes = myNotes.init;
+
+		myNotes = myNotes.init;
 
 		^myNotes;
 
 	}
+
+
+	remove0waits {
+
+		var myNotes = Notes.new;
+
+		waits.do {
+
+			arg item,i;
+
+			if((item != 0.00),{
+
+				myNotes.freqs = myNotes.freqs.add(freqs.at(i));
+				myNotes.probs = myNotes.probs.add(probs.at(i));
+				myNotes.waits = myNotes.waits.add(waits.at(i));
+				myNotes.durations = myNotes.durations.add(durations.at(i));
+				myNotes.lags = myNotes.lags.add(lags.at(i));
+				myNotes.vels = myNotes.vels.add(vels.at(i));
+
+			});
+
+		};
+
+		myNotes.numerator = numerator;
+
+		myNotes = myNotes.init;
+
+		^myNotes;
+	}
+
+	add {arg addToo;
+
+		var myNotes = Notes.new;
+		
+		addToo = addToo.deepCopy;
+		
+
+				myNotes.freqs = freqs ++ addToo.freqs;
+				myNotes.probs = probs ++ addToo.probs;
+				myNotes.waits = waits ++ addToo.waits;
+				myNotes.durations = durations ++ addToo.durations;
+				myNotes.lags = lags ++ addToo.lags;
+				myNotes.vels = vels ++ addToo.vels;
+
+				myNotes.numerator = numerator;
+
+		myNotes = myNotes.init;
+
+		^myNotes;
+
+	}
+
 }
 

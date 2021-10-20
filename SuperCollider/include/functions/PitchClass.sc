@@ -1,81 +1,5 @@
 /*
-* Scale and transformations
-*/
-
-~createScale = {arg tonerow, key = 0;
-
-	var fullscale = [];
-
-	tonerow = tonerow + key;
-
-	for(-2,12,
-		{ arg i;
-			tonerow.do({arg item, ii;
-
-				var point;
-
-				point = item + (i*12);
-
-				if((point >=0) && (point <= 120),{
-
-					fullscale = fullscale.add(point);
-
-			};)});
-
-	});
-	fullscale.sort;
-};
-
-
-~melodicCurves = {arg noteSeq, tonerow,gap = 2;
-
-	var point = 0, mapEnv,mapfreqs = [], mapwaits = [];
-
-	for(0,noteSeq.freqs.size - 1,
-		{ arg i;
-			if(noteSeq.freqs.at(i)
-				>= 1,{
-
-					mapfreqs =	mapfreqs.add(noteSeq.freqs.at(i));
-					mapwaits =	mapwaits.add(noteSeq.durations.at(i));
-
-			});
-	});
-
-	mapfreqs =	mapfreqs.add(noteSeq.freqs.at(0));
-
-
-	mapEnv = Env.new(mapfreqs,mapwaits,\sine);
-	
-	mapfreqs.postln;
-	mapwaits.postln;
-
-
-	mapEnv.plot;
-
-	noteSeq.freqs.do({ arg item, i;
-		var subtone;
-
-		if( item == 0,
-			{
-
-				subtone = tonerow.copyRange(tonerow.indexOfGreaterThan( mapEnv.at(point))
-					- gap,tonerow.indexOfGreaterThan( mapEnv.at(point))
-					+ (gap - 1));
-
-				noteSeq.freqs.put(i,subtone.choose);
-
-
-		});
-		point = point + noteSeq.waits.at(i);
-	});
-	`
-	noteSeq;
-};
-
-/*
-~tt = ~melCurves.value(~verse.notes,~tonerow);
-~tt.freqs;
+* PCset
 */
 
 ~pcset = {arg tonerow, key = 0;
@@ -102,7 +26,6 @@
 
 		if((itemp == 'rest') || (itemp == 0),
 			{
-				"I be here".postln;
 
 				itemp = 'rest';
 				pitches = pitches.add(itemp);
@@ -141,16 +64,20 @@
 
 	if(transpose >= 0,
 		{
-			pitches = (pitches - transpose)%12;
+			pitches = (pitches + transpose)%12;
 
 		},
 		{
-			pitches = (abs(transpose) -  pitches)%12;
+			pitches = (abs(transpose) +  pitches)%12;
 	});
 
 	pitches;
 
 };
+
+/*
+* Transpose Inverse
+*/
 
 ~pitchClassTI = {arg pitch,transpose,key = 0;
 
@@ -160,11 +87,11 @@
 
 	if(transpose >= 0,
 		{
-			pitches = (pitches + transpose)%12;
+			pitches = (pitches - transpose)%12;
 
 		},
 		{
-			pitches = (abs(transpose) +  pitches)%12;
+			pitches = (abs(transpose) - pitches)%12;
 	});
 
 
@@ -172,18 +99,53 @@
 
 };
 
+/*
+* Interval Addition
+*/
 
-~harmony = {arg pitch,transpose,key = 0;
+~invAdd = {arg notes1,notes2, key = 0;
 
-	var pitches,pitches0,harmony;
+	   var mynotes, map1, map2,rt;
 
-	pitches = ~pcset.value(pitch,key);
+	   mynotes = Notes.new;
+	
+	   rt = (notes1.realtime ++ notes2.realtime).round(0.03125);
+	   rt = (rt.as(Set).as(Array).sort).addFirst(0.0);
 
-	harmony = ~pitchClassT.value(pitch,transpose,key);
+	   map1 = Env.new(notes1.freqs,notes1.waits,\hold);
+	   map2 = Env.new(notes2.freqs,notes2.waits,\hold);
 
-	pitches0 = ~pcset.value(harmony,key);
+	
+	   for ( 0, rt.size - 2 , {arg i;
+		
+	       var note, wait;
 
-	harmony =  ~pitchMap.value(harmony,pitches0,pitches,key);
+	       rt.at(i).post;
+	       "   ".post;
 
+	       map1.at(rt.at(i)).post;
+	       "   ".post;
+		
+	       map2.at(rt.at(i)).post;
+	       "   ".post;
+		
+	       note = ((map1.at(rt.at(i)) - key) + (map2.at(rt.at(i)) - key))%12;
+		
+	       note.post;
+	       "   ".post;
+		
+	       wait = (rt.at(i+1) - rt.at(i));
+		
+	       wait.postln;
+
+	       mynotes.freqs = mynotes.freqs.add(note);
+	       mynotes.waits = mynotes.waits.add(wait);
+	       
+	     });
+
+	   mynotes.freqs = mynotes.freqs + (60 + key);
+
+	   mynotes = mynotes.init;
+
+	   mynotes;
 };
-

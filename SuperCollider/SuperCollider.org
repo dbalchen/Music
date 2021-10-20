@@ -1,5 +1,5 @@
 * Songs
-** [[file:song7.sc][song7]]
+** [[file:~/Music/song7/song7.org][song7]]
 ** [[file:~/Music/song9/song9.sc][song9]]
 ** [[file:~/Music/MuscleBone/include/patch/muscleBonesStrings.sc][Muscle and Bones Strings]]
 ** [[file:include/song_template.sc][Song Template]]
@@ -22,7 +22,7 @@
 *** [[file:include/Classes/Track.sc][Track]]
 *** [[file:include/Classes/Notes.sc][Notes]]
 **** [[file:include/functions/getMeasures.sc][getMeasures.sc]]
-**** ADD/Merge Note
+**** merge
 **** [[file:include/functions/PitchClass.sc][PitchClass]]
 ***** Interval Addition
 ****** melodicContour
