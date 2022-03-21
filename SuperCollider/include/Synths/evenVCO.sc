@@ -115,7 +115,7 @@ SynthDef("evenVCO2", {
 
 // ~vcf.gui;
 
-~evenVCOpoly = {arg num, vel = 1,src,out = 0;
+~evenVCOpoly = {arg num, vel = 1,chan,src,out = 0;
     var ret,tidx;
     tidx = ((~windex-1)/120)* num;
 
@@ -140,7 +140,7 @@ SynthDef("evenVCO2", {
 
 
 
-~evenVCOpoly2 = {arg num, vel = 1,src,out = 0;
+~evenVCOpoly2 = {arg num, vel = 1,chan, src,out = 0;
     var ret,tidx;
 
     ret = Synth("evenVCO2");

@@ -12,8 +12,9 @@ Server.default.makeGui;
 
 /*
 * Instrument Setup
+*/
 
-//  Set up synth
+/* Set up synth
 
 "/home/dbalchen/Music/SuperCollider/include/Synths/dynOsc.sc".load;
 
@@ -21,6 +22,7 @@ Server.default.makeGui;
 
 ~vca.gui;
 ~vcf.gui;
+
 */
 
 /*
@@ -41,67 +43,18 @@ t = TempoClock.default.tempo = 90/60;
 ~mytrack = Track.new(~out0,0);
 
 /*
+
 ~mytrack.noteON = ~playDyno;
+
 */
 
 // Get track 1
 
-~mynotes = (~midiFactory.getTrack(0,2)).remove0waits;
-
-~mynotes = ~mynotes.init;
-
-~ff0 = ~mynotes.freqs.deepCopy;
-
-/*
-**  Play with Pitches
-*/
-
-// Pitch Classes
-
-~t0 =  [0,2,4,4,5,7,9,11];
-// ~t1 =  [ 0.0, 1.0, 2.0, 4.0, 5.0, 7.0, 9.0, 10.0, 11.0 ];
-~t1 = [ 0.0, 1.0, 3.0, 4.0, 5.0, 7.0, 9.0, 11.0 ]
-
-~t0 =  [0,2,2,4,5,7,9,9,11];
-~t1 = [ 0.0, 2.0, 3.0, 5.0, 7.0, 8.0, 9.0, 10.0, 11.0 ];
-
-//~t1 = [2,4,5,7,9,11,0];
-
-
-
-
-~f0 = ~ff0.deepCopy;
-
-~t1 = ~pitchClassT.value(~t0 + 12,2);
-
-~f0 = ~pitchMap.value(~f0,~t1,~t0);
-
-
-~f0 = ~mynotesT.freqs.deepCopy;
-
-~pcset.value(~f0);
-
-~mynotesT.freqs = ~f0 - 12;
-
-
-/*
-** Play with Rhythm
-*/
-
-/*
-** Load and play
-*/
-
+~mynotes = (~midiFactory.getTrack(0,5)).remove0waits;
 
 ~mytrack.notes = ~mynotes.init;
 
-~mytrack.notes = ~mynotesT.init;
-
-~mytrack10.notes = ~mynotes10.init;
-
-~mynotesT = ~invAdd.value(~mynotes,~mynotes2,9);
-
-
+~mytrack.notes = ~myAdd.init;
 
 ~mytrack.transport.play;
 
@@ -109,19 +62,13 @@ t = TempoClock.default.tempo = 90/60;
 
 ~mytrack.transport.unmute;
 
-
 /*
 * Track 2
 */
-
 ~mytrack2 = Track.new(~out0,1);
 
-~mynotes2 = ~midiFactory.getTrack(1,3).remove0waits;
-
-~mynotes2 = ~mynotes2.init;
-
-~mynotes2.freqs;
-
+// ~mynotes2 = ~mynotes.deepCopy;
+~mynotes2 = ~midiFactory.getTrack(3,2).remove0waits;
 
 /*
 ** Load and play
@@ -142,7 +89,6 @@ t = TempoClock.default.tempo = 90/60;
 /*
 * Track 10
 */
-
 ~mytrack10 = Track.new(~out0,9);
 
 ~mynotes10 = ~midiFactory.getTrack(9,1);
@@ -168,8 +114,63 @@ t = TempoClock.default.tempo = 90/60;
 
 ~startTimer.value(90);
 
-~rp = {~mytrack.transport.play;~mytrac10.transport.play;~mytrack2.transport.play;};
+~rp = {
 
 ~mytrack.transport.play;~mytrack10.transport.play;~mytrack2.transport.play;
+
 ~mytrack.transport.stop;~mytrack10.transport.stop;~mytrack2.transport.stop;
+
+};
+
+
+
+///////// Freqy
+
+~export2midi = {
+	arg m, notes, channel = 0, track =  1;
+
+	notes.do {
+	m.addNote(       channel: channel, track: 2 );
+	};
+	
+};
+
+~f0 = ~mynotes.freqs;
+
+~t0 = [0,2,4,5,7,9,11];
+~ti = [0,11,9,7,5,4,2];
+
+
+m = SimpleMIDIFile( "~/Desktop/midifiletest.mid" ); // create empty file
+m.init1( 5, 90, "4/4" );    // init for type 1 (multitrack); 3 tracks, 120bpm, 4/4 measures
+m.timeMode = \seconds;  // change from default to something useful
+
+
+~tmpNotes = ~mynotes.deepCopy;
+~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(3)));
+~tmpNotes.freqs = ~f1;
+
+~tmpNotes = ~mynotes.deepCopy;
+~f1 = ~pitchMap.value(~f0,~t0,(~t0.reverse));
+~tmpNotes.freqs = ~f1;
+
+~tmpNotes = ~mynotes.deepCopy;
+~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(3).reverse));
+~tmpNotes.freqs = ~f1;
+
+~tmpNotes = ~mynotes.deepCopy;
+~f1 = ~pitchMap.value(~f0,~t0,(~t0.rotate(5)));
+~tmpNotes.freqs = ~f1;
+
+~tmpNotes = ~mynotes.deepCopy;
+~f1 = ~pitchMap.value(~f0,~t0,(~t0.rotate(7)));
+~tmpNotes.freqs = ~f1;
+
+
+
+
+
+~mynotes.freqs = ~f1;
+
+~mynotes.freqs = ~f0;
 

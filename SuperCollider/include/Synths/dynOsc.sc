@@ -84,7 +84,7 @@
 // ~vca.gui;
 ~vcf = MyADSR.new(0.5,0.50,0.7,0.6,"VCF");
 
-~playDyno = {arg num, vel = 1,src,out = 0, synth = "nbasicSynth", vca = ~vca, vcf = ~vcf;
+~playDyno = {arg num, vel = 1, chan, src, out = 0, synth = "nbasicSynth", vca = ~vca, vcf = ~vcf;
 	var ret;
 
 	ret = Synth(synth);
@@ -102,8 +102,8 @@
 
 	vcf.setfADSR(ret);
 	ret.set(\cutoff,10000);
-	ret.set(\gain,1.2);
-	ret.set(\aoc,1.0);
+	ret.set(\gain,0.72);
+	ret.set(\aoc,0.70);
 
 	ret.set(\hpf,32.5);
 	ret.set(\gate,1);

@@ -24,7 +24,7 @@ Track {
 
         synthNotes = Array.newClear(128);
 
-        noteON = {arg num,vel,src,out;
+        noteON = {arg num,vel,chan,src,out;
 
             var ret;
 
@@ -36,7 +36,6 @@ Track {
             ret.set(\out,out);
 
             ret;
-
         };
 
         noteOFF =  {arg num,synth;
@@ -46,7 +45,7 @@ Track {
         on = MIDIFunc.noteOn({ |veloc, num, chan, src|
 
             if((chan == channel), {
-                synthNotes[num] = noteON.value(num,veloc,src,out);
+                synthNotes[num] = noteON.value(num,veloc,chan,src,out);
             })
         });
 

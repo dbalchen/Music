@@ -174,3 +174,112 @@ Archived entries from file /home/dbalchen/Music/song7/include/classes/PitchClass
 */
 
 /*
+
+* RRRRRRR
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-11-21 Sun 15:16
+  :ARCHIVE_FILE: ~/Music/SuperCollider/include/functions/PitchClass.sc
+  :ARCHIVE_CATEGORY: PitchClass
+  :END:
+/*
+
+* Old Pitchmap
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-11-21 Sun 15:17
+  :ARCHIVE_FILE: ~/Music/SuperCollider/include/functions/PitchClass.sc
+  :ARCHIVE_CATEGORY: PitchClass
+  :END:
+~pitchMap = {arg pitch,t0,t1,key = 0;
+
+	var pitches = [];
+
+	pitch.do {arg itemp, a;
+
+		var search;
+
+		if((itemp == 'rest') || (itemp == 0),
+			{
+				itemp = 'rest';
+				pitches = pitches.add(itemp);
+
+			},
+			{
+				search = (itemp - key)%12;
+
+				t0.do{arg item,b;
+
+					var diff;
+
+					if(item == search,
+						{
+							pitches = pitches.add(itemp);
+							//							diff = t1[b] - item;
+							//							pitches = pitches.add(itemp + diff)
+					});
+				};
+		});
+
+	};
+
+	pitches + 60;
+};
+
+
+* Transpose
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-12-15 Wed 14:48
+  :ARCHIVE_FILE: ~/Music/SuperCollider/include/functions/PitchClass.sc
+  :ARCHIVE_CATEGORY: PitchClass
+  :END:
+*/
+
+~pitchClassT = {arg pitch,transpose,key = 0;
+
+	var pitches;
+
+	pitches = pitch%12;
+
+	if(transpose >= 0,
+		{
+			pitches = (pitches + transpose)%12;
+
+		},
+		{
+			pitches = (abs(transpose) +  pitches)%12;
+	});
+
+	pitches;
+
+};
+
+/*
+
+* Transpose Inverse
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-12-15 Wed 14:48
+  :ARCHIVE_FILE: ~/Music/SuperCollider/include/functions/PitchClass.sc
+  :ARCHIVE_CATEGORY: PitchClass
+  :END:
+*/
+
+~pitchClassTI = {arg pitch,transpose,key = 0;
+
+	var pitches;
+
+	pitches = pitch%12;
+
+	if(transpose >= 0,
+		{
+			pitches = (pitches - transpose)%12;
+
+		},
+		{
+			pitches = (abs(transpose) - pitches)%12;
+	});
+
+
+	pitches;
+
+};
+
+/*

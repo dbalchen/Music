@@ -3,65 +3,37 @@
 // =====================================================================
 */
 
-~getMeasure = {arg start, end, mynotes;
 
-    var noteIndex, subNotes, diff;
+~getMeasure = {arg start, end, notes;
 
-    start = (start-1)*mynotes.numerator;
+	var a = nil,b = nil, mynotes, diff;
 
-    end = end*mynotes.numerator;
+	start = (start-1)*notes.numerator;
 
-    noteIndex = [];
+	end = end*notes.numerator;
 
-    mynotes.waits.do({
+	notes.realtime.do({arg item,idx; if(item > start && a == nil,{ a = idx -1;});});
+	notes.realtime.do({arg item,idx; if(item >= end && b == nil,{ b = idx - 1});});
 
-        arg item, i;
+	mynotes = Notes.new;
 
-        var tmp = 0;
+	mynotes.freqs = notes.freqs.copyRange(a,b);
+	mynotes.waits = notes.waits.copyRange(a,b);
+	mynotes.durations = notes.durations.copyRange(a,b);
+	mynotes.vels = notes.vels.copyRange(a,b);
 
-        tmp = (mynotes.realtime.at(i) - item).round(0.125);
+	diff = notes.realtime.at(a).round(0.03125) - start;
 
-        if(((tmp >= start) && (tmp < end)),{
+	mynotes.freqs = ['rest'] ++ mynotes.freqs;
+	mynotes.waits = mynotes.waits.addFirst(diff);
+	mynotes.durations = mynotes.durations.addFirst(diff);
+	mynotes.vels = [127] ++ mynotes.vels;
 
-            noteIndex = noteIndex.add(i);
-            noteIndex.postln;
+	diff = end - notes.realtime.at(b).round(0.03125);
 
-        });
+	mynotes.waits = mynotes.waits.put(mynotes.waits.size - 1, diff);
 
-    });
+	mynotes.numerator = notes.numerator;
 
-    subNotes = Notes.new;
-
-    subNotes.freqs = mynotes.freqs.copyRange(noteIndex.first,noteIndex.last);
-    subNotes.waits = mynotes.waits.copyRange(noteIndex.first,noteIndex.last);
-    subNotes.durations = mynotes.durations.copyRange(noteIndex.first,noteIndex.last);
-    subNotes.vels = mynotes.vels.copyRange(noteIndex.first,noteIndex.last);
-
-    diff = mynotes.realtime.at(noteIndex.first) - mynotes.waits.at(noteIndex.first);
-
-    diff = diff - start;
-
-    diff.postln;
-
-    if(diff != 0,{
-
-        subNotes.freqs = ['rest'] ++ subNotes.freqs;
-        subNotes.waits = subNotes.waits.addFirst(diff);
-        subNotes.durations = subNotes.durations.addFirst(diff);
-        subNotes.vels = [127] ++ subNotes.vels;
-
-    });
-
-    diff = (mynotes.realtime.at(noteIndex.last)).round(0.125) - end;
-
-    if(diff != 0,{
-
-        subNotes.waits = subNotes.waits.put(subNotes.waits.size - 1,
-            subNotes.waits.last + diff);
-
-    });
-
-    subNotes.numerator = mynotes.numerator;
-
-    subNotes.init;
+	mynotes = (mynotes.init).remove0waits;
 };

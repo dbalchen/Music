@@ -153,3 +153,44 @@ Archived entries from file /home/dbalchen/Music/song9/song9.sc
 
 ~mytrack.transport.stop;~mytrack2.transport.stop;~mytrack3.transport.stop;~mytrack10.transport.stop;
 
+
+*  Play with Pitches
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-26 Tue 11:33
+  :ARCHIVE_FILE: ~/Music/song9/song9.sc
+  :ARCHIVE_OLPATH: Track 1
+  :ARCHIVE_CATEGORY: song9
+  :END:
+*/
+
+// Pitch Classes
+
+~ff0 = ~mynotes.freqs.deepCopy;
+
+~t0 =  [0,2,4,4,5,7,9,11];
+// ~t1 =  [ 0.0, 1.0, 2.0, 4.0, 5.0, 7.0, 9.0, 10.0, 11.0 ];
+~t1 = [ 0.0, 1.0, 3.0, 4.0, 5.0, 7.0, 9.0, 11.0 ]
+
+~t0 =  [0,2,2,4,5,7,9,9,11];
+~t1 = [ 0.0, 2.0, 3.0, 5.0, 7.0, 8.0, 9.0, 10.0, 11.0 ];
+
+//~t1 = [2,4,5,7,9,11,0];
+
+
+
+
+~f0 = ~ff0.deepCopy;
+
+~t1 = ~pitchClassT.value(~t0 + 12,2);
+
+~f0 = ~pitchMap.value(~f0,~t1,~t0);
+
+
+~f0 = ~mynotesT.freqs.deepCopy;
+
+~pcset.value(~f0);
+
+~mynotesT.freqs = ~f0 - 12;
+
+
+/*

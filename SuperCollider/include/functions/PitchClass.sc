@@ -16,87 +16,38 @@
 
 */
 
-~pitchMap = {arg pitch,t0,t1,key = 0;
 
-	var pitches = [];
+~pitchMap = {
+	arg fn , p0, pI;
+	var newP = [];
 
-	pitch.do {arg itemp, a;
+	fn.do(
+		{arg item, i;
+			var noteIdx,note;
 
-		var search;
+//			[i, item].postln;
 
-		if((itemp == 'rest') || (itemp == 0),
-			{
+			note = item%12;
 
-				itemp = 'rest';
-				pitches = pitches.add(itemp);
+			noteIdx = p0.detectIndex({arg item0, idx;
+				item0 == note;
+			});
 
-			},
-			{
-				search = (itemp - key)%12;
+			//		[note,noteIdx].postln;
 
-				t0.do{arg item,b;
+			if(noteIdx != nil,
+				{
+					newP = newP.add(pI.at(noteIdx));
+				},
+				{
+					newP = newP.add(note);
+				}
+            );
 
-					var diff;
+		}
+	);
 
-					if(item == search,
-						{
-							diff = t1[b] - item;
-							pitches = pitches.add(itemp + diff)
-					});
-				};
-		});
-
-	};
-
-	pitches;
-};
-
-
-/*
-* Transpose
-*/
-
-~pitchClassT = {arg pitch,transpose,key = 0;
-
-	var pitches;
-
-	pitches = pitch%12;
-
-	if(transpose >= 0,
-		{
-			pitches = (pitches + transpose)%12;
-
-		},
-		{
-			pitches = (abs(transpose) +  pitches)%12;
-	});
-
-	pitches;
-
-};
-
-/*
-* Transpose Inverse
-*/
-
-~pitchClassTI = {arg pitch,transpose,key = 0;
-
-	var pitches;
-
-	pitches = pitch%12;
-
-	if(transpose >= 0,
-		{
-			pitches = (pitches - transpose)%12;
-
-		},
-		{
-			pitches = (abs(transpose) - pitches)%12;
-	});
-
-
-	pitches;
-
+	newP + 60;
 };
 
 /*
@@ -105,47 +56,48 @@
 
 ~invAdd = {arg notes1,notes2, key = 0;
 
-	   var mynotes, map1, map2,rt;
+	var mynotes, map1, map2,rt;
 
-	   mynotes = Notes.new;
-	
-	   rt = (notes1.realtime ++ notes2.realtime).round(0.03125);
-	   rt = (rt.as(Set).as(Array).sort).addFirst(0.0);
+	mynotes = Notes.new;
 
-	   map1 = Env.new(notes1.freqs,notes1.waits,\hold);
-	   map2 = Env.new(notes2.freqs,notes2.waits,\hold);
+//	rt = (notes1.realtime ++ notes2.realtime).round(0.03125);
 
-	
-	   for ( 0, rt.size - 2 , {arg i;
-		
-	       var note, wait;
+    rt = (notes1.realtime).round(0.03125);
+	rt = (rt.as(Set).as(Array).sort);
 
-	       rt.at(i).post;
-	       "   ".post;
+	map1 = Env.new(notes1.freqs,notes1.waits,\hold);
+	map2 = Env.new(notes2.freqs,notes2.waits,\hold);
 
-	       map1.at(rt.at(i)).post;
-	       "   ".post;
-		
-	       map2.at(rt.at(i)).post;
-	       "   ".post;
-		
-	       note = ((map1.at(rt.at(i)) - key) + (map2.at(rt.at(i)) - key))%12;
-		
-	       note.post;
-	       "   ".post;
-		
-	       wait = (rt.at(i+1) - rt.at(i));
-		
-	       wait.postln;
+	for ( 0, rt.size - 2 , {arg i;
 
-	       mynotes.freqs = mynotes.freqs.add(note);
-	       mynotes.waits = mynotes.waits.add(wait);
-	       
-	     });
+		var note, wait;
 
-	   mynotes.freqs = mynotes.freqs + (60 + key);
+		rt.at(i).post;
+		"   ".post;
 
-	   mynotes = mynotes.init;
+		map1.at(rt.at(i)).post;
+		"   ".post;
 
-	   mynotes;
+		map2.at(rt.at(i)).post;
+		"   ".post;
+
+		note = ((map1.at(rt.at(i)) - key) + (map2.at(rt.at(i)) - key))%12;
+
+		note.post;
+		"   ".post;
+
+		wait = (rt.at(i+1) - rt.at(i));
+
+		wait.postln;
+
+		mynotes.freqs = mynotes.freqs.add(note);
+		mynotes.waits = mynotes.waits.add(wait);
+
+	});
+
+	mynotes.freqs = mynotes.freqs + (60 + key);
+
+	mynotes = mynotes.init;
+
+	mynotes;
 };
