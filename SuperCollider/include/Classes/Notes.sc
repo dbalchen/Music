@@ -197,9 +197,9 @@ Notes {
 	}
 
 	replace {arg replacewith;
-		
+
 		replacewith = replacewith.deepCopy;
-		
+
 		freqs = replacewith.freqs;
 		probs = replacewith.probs;
 		waits = replacewith.waits;
@@ -210,6 +210,44 @@ Notes {
 		numerator = replacewith.numerator;
 
 	}
+
+
+	getMeasure {arg start, end;
+
+		var a = nil,b = nil, mynotes, diff;
+
+		start = (start-1)*this.numerator;
+
+		end = end*this.numerator;
+
+		this.realtime.do({arg item,idx; if(item > start && a == nil,{ a = idx -1;});});
+		this.realtime.do({arg item,idx; if(item >= end && b == nil,{ b = idx - 1});});
+
+		mynotes = Notes.new;
+
+		mynotes.freqs = this.freqs.copyRange(a,b);
+		mynotes.waits = this.waits.copyRange(a,b);
+		mynotes.durations = this.durations.copyRange(a,b);
+		mynotes.vels = this.vels.copyRange(a,b);
+
+		diff = this.realtime.at(a).round(0.03125) - start;
+
+		mynotes.freqs = ['rest'] ++ mynotes.freqs;
+		mynotes.waits = mynotes.waits.addFirst(diff);
+		mynotes.durations = mynotes.durations.addFirst(diff);
+		mynotes.vels = [127] ++ mynotes.vels;
+
+		diff = end - this.realtime.at(b).round(0.03125);
+
+		mynotes.waits = mynotes.waits.put(mynotes.waits.size - 1, diff);
+
+		mynotes.numerator = this.numerator;
+
+		mynotes = (mynotes.init).remove0waits;
+
+		^mynotes;
+	}
+
 
 }
 

@@ -8,7 +8,7 @@ Server.default.makeGui;
 // Pitch Libraries
 
 "/home/dbalchen/Music/SuperCollider/include/functions/PitchClass.sc".load;
-"/home/dbalchen/Music/SuperCollider/include/functions/getMeasures.sc".load;
+// "/home/dbalchen/Music/SuperCollider/include/functions/getMeasures.sc".load;
 
 /*
 * Instrument Setup
@@ -132,7 +132,7 @@ t = TempoClock.default.tempo = 90/60;
 	notes.do {
 	m.addNote(       channel: channel, track: 2 );
 	};
-	
+
 };
 
 ~f0 = ~mynotes.freqs;
@@ -140,6 +140,7 @@ t = TempoClock.default.tempo = 90/60;
 ~t0 = [0,2,4,5,7,9,11];
 ~ti = [0,11,9,7,5,4,2];
 
+[0,2,4,5,7,9,11].rotate(5)
 
 m = SimpleMIDIFile( "~/Desktop/midifiletest.mid" ); // create empty file
 m.init1( 5, 90, "4/4" );    // init for type 1 (multitrack); 3 tracks, 120bpm, 4/4 measures
@@ -147,30 +148,29 @@ m.timeMode = \seconds;  // change from default to something useful
 
 
 ~tmpNotes = ~mynotes.deepCopy;
-~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(3)));
-~tmpNotes.freqs = ~f1;
+~tmpNotes = ~tmpNotes.merge(~tmpNotes);
+~tmpNotes.freqs;
 
-~tmpNotes = ~mynotes.deepCopy;
-~f1 = ~pitchMap.value(~f0,~t0,(~t0.reverse));
-~tmpNotes.freqs = ~f1;
+~f1 = ~pitchMap.value(~f0,~t0,~ti);
 
-~tmpNotes = ~mynotes.deepCopy;
-~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(3).reverse));
-~tmpNotes.freqs = ~f1;
+~f1 = ~pitchMap.value(~f0,~t0,~t0.reverse);
 
-~tmpNotes = ~mynotes.deepCopy;
+~f1 = ~pitchMap.value(~f0,~t0,~ti.reverse);
+
+~f1 =  ~f0.reverse;
+
 ~f1 = ~pitchMap.value(~f0,~t0,(~t0.rotate(5)));
-~tmpNotes.freqs = ~f1;
 
-~tmpNotes = ~mynotes.deepCopy;
 ~f1 = ~pitchMap.value(~f0,~t0,(~t0.rotate(7)));
-~tmpNotes.freqs = ~f1;
 
+~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(5)));
+
+~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(7)));
 
 
 
 
 ~mynotes.freqs = ~f1;
 
-~mynotes.freqs = ~f0;
+~mynotes.freqs = ~f0.reverse;
 
