@@ -194,3 +194,42 @@ Archived entries from file /home/dbalchen/Music/song9/song9.sc
 
 
 /*
+
+* Simple midi files
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2022-05-17 Tue 15:09
+  :ARCHIVE_FILE: ~/Music/song9/song9.sc
+  :ARCHIVE_CATEGORY: song9
+  :END:
+~mm = SimpleMIDIFile( "~/Desktop/midifiletest.mid" ); // create empty file
+~mm.init1( 5, 90, "4/4" );    // init for type 1 (multitrack); 3 tracks, 120bpm, 4/4 measures
+~mm.timeMode = \seconds;  // change from default to something useful
+
+~mm = ~export2midi.value(~mm,~mynotes,0,1);
+
+~mm.adjustEndOfTrack;
+
+~mm.write;
+~mm.midiEvents.dopostln;
+
+
+* more export
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2022-05-17 Tue 15:11
+  :ARCHIVE_FILE: ~/Music/song9/song9.sc
+  :ARCHIVE_CATEGORY: song9
+  :END:
+~export2midi = {
+	arg m, notes, channel = 0, track =  1;
+
+	for (0, notes.freqs.size - 1,
+		{arg i;
+
+			m.addNote(noteNumber: notes.freqs.at(i), velo: notes.vels.at(i),
+				startTime:  notes.realtime.at(i), dur: notes.durations.at(i),
+				channel: channel, track: track);	
+			
+		});
+
+	m;
+};
