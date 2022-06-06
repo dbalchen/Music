@@ -2,12 +2,13 @@
 * SC Setup
 */
 Server.default.makeGui;
-
+Quarks.gui;
 "/home/dbalchen/Music/SuperCollider/include/setup.sc".load;
 
 // Pitch Libraries
 
 "/home/dbalchen/Music/SuperCollider/include/functions/PitchClass.sc".load;
+// "/home/dbalchen/Music/SuperCollider/include/functions/getMeasures.sc".load;
 
 /*
 * Instrument Setup
@@ -42,9 +43,9 @@ t = TempoClock.default.tempo = 90/60;
 ~mytrack = Track.new(~out0,0);
 
 /*
-
 ~mytrack.noteON = ~playDyno;
 
+~mytrack.noteON =~playRhodes;
 
 */
 
@@ -54,7 +55,11 @@ t = TempoClock.default.tempo = 90/60;
 
 ~mytrack.notes = ~mynotes.init;
 
+~mytrack.notes = ~myAdd.init;
+
 ~mytrack.transport.play;
+
+~mytrack.transport.stop;
 
 ~mytrack.transport.mute;
 
@@ -65,16 +70,8 @@ t = TempoClock.default.tempo = 90/60;
 */
 ~mytrack2 = Track.new(~out0,1);
 
-// ~mynotes2 = ~mynotes.deepCopy;~tmp = ~mynotes.deepCopy;
-
-~mytrack.notes = ~tmp.init;
-
-
-~f0 = ~tmp.freqs;
-
-~t0 = [0,2,4,5,7,9,11];
-~ti = [0,11,9,7,5,4,2];
-~mynotes2 = ~midiFactory.getTrack(1,2).remove0waits;
+// ~mynotes2 = ~mynotes.deepCopy;
+~mynotes2 = ~midiFactory.getTrack(3,2).remove0waits;
 
 /*
 ** Load and play
@@ -130,23 +127,34 @@ t = TempoClock.default.tempo = 90/60;
 
 
 
-/*
-* Freq Manipulation
-*/
+///////// Freqy
 
-~tmp = ~mynotes.deepCopy;
+~export2midi = {
+	arg m, notes, channel = 0, track =  1;
 
-~mytrack.notes = ~tmp.init;
+	notes.do {
+	m.addNote(       channel: channel, track: 2 );
+	};
 
+};
 
-~f0 = ~tmp.freqs;
+~f0 = ~mynotes.freqs;
 
 ~t0 = [0,2,4,5,7,9,11];
 ~ti = [0,11,9,7,5,4,2];
 
-~f1 = ~pitchMap.value(~f0,~t0,~ti);
+[0,2,4,5,7,9,11].rotate(5)
 
-~f1 = ~pitchMap.value(~f0,~t0,~ti.rotate(3));
+m = SimpleMIDIFile( "~/Desktop/midifiletest.mid" ); // create empty file
+m.init1( 5, 90, "4/4" );    // init for type 1 (multitrack); 3 tracks, 120bpm, 4/4 measures
+m.timeMode = \seconds;  // change from default to something useful
+
+
+~tmpNotes = ~mynotes.deepCopy;
+~tmpNotes = ~tmpNotes.merge(~tmpNotes);
+~tmpNotes.freqs;
+
+~f1 = ~pitchMap.value(~f0,~t0,~ti);
 
 ~f1 = ~pitchMap.value(~f0,~t0,~t0.reverse);
 
@@ -156,51 +164,16 @@ t = TempoClock.default.tempo = 90/60;
 
 ~f1 = ~pitchMap.value(~f0,~t0,(~t0.rotate(5)));
 
-~f1 = ~pitchMap.value(~f0,~t0,~t0.rotate(-4));
+~f1 = ~pitchMap.value(~f0,~t0,(~t0.rotate(7)));
 
-~f1 = ~pitchMap.value(~f0,~t0,~ti.rotate(5));
+~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(5)));
 
 ~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(7)));
 
 
-~tmp.freqs = ~f1;
-
-~tmp2 = ~tmp.deepCopy;
-
-~tmp2 = ~tmp2.merge(~tmp);
 
 
+~mynotes.freqs = ~f1;
 
-////// Filter Synth settings
+~mynotes.freqs = ~f0.reverse;
 
-~dsvca = MyADSR.new(0.85,2.3,0.2,0.6,"VCA");
-// ~vca.gui;
-~dsvcf = MyADSR.new(2.35,1.35,0.04,0.7,"VCF");
-
-
-~dstrings = 
-{
-	arg gate = 0, freq = 220, lagtime = 0, bend = 0;
-
-	var sig;
-
-	freq = Lag.kr(freq,lagtime);
-
-	freq = 1.5*SinOsc.kr(8) + freq;
-
-	freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!8;
-
-	sig = (0.35*SinOsc.ar(freq,0) + 0.5*Saw.ar(2*freq));
-
-	sig;
-};
-
-
-~dynOsc.value("dStrings",osc: ~dstrings);
-
-
-~playDstrings = {arg num, vel = 1, chan, src, out = 0, synth = "dStrings", vca = ~dsvca, vcf = ~dsvcf;
-	~playDyno.value(num, vel, chan, src, out, synth, vca, vcf);
-};
-
-~mytrack.noteON = ~playDstrings;
