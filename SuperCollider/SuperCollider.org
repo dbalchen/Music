@@ -21,4 +21,5 @@
 *** [[file:include/Classes/MidiFactory.sc][MidiFactory]]
 *** [[file:include/Classes/Track.sc][Track]]
 *** [[file:include/Classes/Notes.sc][Notes]]
+*** [[file:include/Classes/MyADSR.sc][MyADSR]]
 **** [[file:include/functions/PitchClass.sc][PitchClass]]

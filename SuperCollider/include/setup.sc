@@ -28,8 +28,8 @@
 ~out3 = MIDIOut(3);
 ~out3.latency = 0;
 
-~displayCC.free;
-~displayCC = MIDIdef.cc(\displayCC, {arg ...args; args.postln}); // display CC
+//~displayCC.free;
+//~displayCC = MIDIdef.cc(\displayCC, {arg ...args; args.postln}); // display CC
 
 
 ~rp = {};

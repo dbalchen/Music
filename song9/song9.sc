@@ -178,7 +178,7 @@ t = TempoClock.default.tempo = 90/60;
 ~dsvcf = MyADSR.new(2.35,1.35,0.04,0.7,"VCF");
 
 
-~dstrings = 
+~dstrings =
 {
 	arg gate = 0, freq = 220, lagtime = 0, bend = 0;
 
@@ -186,11 +186,13 @@ t = TempoClock.default.tempo = 90/60;
 
 	freq = Lag.kr(freq,lagtime);
 
-	freq = 1.5*SinOsc.kr(8) + freq;
+	freq = 0.5*SinOsc.kr(8) + freq;
 
-	freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!8;
+	freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!16;
 
-	sig = (0.35*SinOsc.ar(freq,0) + 0.5*Saw.ar(2*freq));
+	sig = sig = (0.35*SinOsc.ar(freq,0) + 0.5*Saw.ar(2*freq));
+
+//    sig = BBandStop.ar(sig,freq,mul:0.25);
 
 	sig;
 };
@@ -198,9 +200,9 @@ t = TempoClock.default.tempo = 90/60;
 
 ~dynOsc.value("dStrings",osc: ~dstrings);
 
-
-~playDstrings = {arg num, vel = 1, chan, src, out = 0, synth = "dStrings", vca = ~dsvca, vcf = ~dsvcf;
-	~playDyno.value(num, vel, chan, src, out, synth, vca, vcf);
+~playDstrings = {arg num, vel = 1, chan, src, out = 0, amp = 1, balance = 0, synth = "dStrings", vca = ~dsvca, vcf = ~dsvcf;
+	~playDyno.value(num, vel, chan, src, out, amp, balance,synth, vca, vcf);
 };
 
+~mytrack = Track.new(~out0,0);
 ~mytrack.noteON = ~playDstrings;
