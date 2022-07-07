@@ -173,9 +173,11 @@ t = TempoClock.default.tempo = 90/60;
 
 ////// Filter Synth settings
 
-~dsvca = MyADSR.new(0.85,2.3,0.2,0.6,"VCA");
-// ~vca.gui;
+~dsvca = MyADSR.new(1.05,2.3,0.2,0.6,"VCA");
+~dsvca.gui;
 ~dsvcf = MyADSR.new(2.35,1.35,0.04,0.7,"VCF");
+
+
 
 
 ~dstrings =
@@ -188,11 +190,28 @@ t = TempoClock.default.tempo = 90/60;
 
 	freq = 0.5*SinOsc.kr(8) + freq;
 
-	freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!16;
+	freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!12;
 
-	sig = sig = (0.35*SinOsc.ar(freq,0) + 0.5*Saw.ar(2*freq));
+	sig = (0.35*SinOsc.ar(freq,0) + 0.5*Saw.ar(2*freq));
 
-//    sig = BBandStop.ar(sig,freq,mul:0.25);
+	sig;
+};
+
+~fmstrings =
+{
+	arg gate = 0, freq = 220, lagtime = 0, bend = 0;
+
+	var sig;
+
+	//	var fbNode = FbNode(1);
+
+	freq = Lag.kr(freq,lagtime);
+
+	freq = 0.5*SinOsc.kr(8) + freq;
+
+	freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!12;
+
+	sig = (0.05*SinOsc.ar(0.5*freq)) + 0.1*LFSaw.ar(freq) + (0.5*Saw.ar(2*freq));
 
 	sig;
 };
@@ -206,3 +225,4 @@ t = TempoClock.default.tempo = 90/60;
 
 ~mytrack = Track.new(~out0,0);
 ~mytrack.noteON = ~playDstrings;
+

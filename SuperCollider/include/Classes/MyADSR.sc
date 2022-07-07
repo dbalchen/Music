@@ -29,15 +29,15 @@ MyADSR {
 	{
 		arg env;
 
-		"set Attack".postln;
+		//		"set Attack".postln;
 		env.set(\attack,attack*att.next);
 
-		"set Decay".postln;
+		//		"set Decay".postln;
 		env.set(\decay,decay*dec.next);
-		"set Sustain".postln;
+		//		"set Sustain".postln;
 		env.set(\sustain,sustain);
 
-		"set Release".postln;
+		//		"set Release".postln;
 		env.set(\release,release);
 	}
 
