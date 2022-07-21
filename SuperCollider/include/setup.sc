@@ -1,16 +1,16 @@
 // Standard Setup for all SC projects
 
 ~midiSetup = {
-    var inPorts = 1;
-    var outPorts = 4;
+	var inPorts = 1;
+	var outPorts = 4;
 
-    MIDIClient.disposeClient;
+	MIDIClient.disposeClient;
 
-    MIDIClient.init(inPorts,outPorts); // explicitly intialize the client
+	MIDIClient.init(inPorts,outPorts); // explicitly intialize the client
 
-    inPorts.do({ arg i;
-        MIDIIn.connect(i, MIDIClient.sources.at(i));
-    });
+	inPorts.do({ arg i;
+		MIDIIn.connect(i, MIDIClient.sources.at(i));
+	});
 
 };
 
@@ -36,48 +36,48 @@
 
 ~startTimer = {arg bpm = 60, num = 4;
 
-    var timeloop,numb;
+	var timeloop,numb;
 
 	numb = num;
 
-    t = TempoClock.default.tempo = bpm / 60;
+	t = TempoClock.default.tempo = bpm / 60;
 
-    "Loop started".postln;
+	"Loop started".postln;
 
-    timeloop = {
+	timeloop = {
 
-        arg beat;
+		arg beat;
 
-        (((beat-1)%numb) + 1).post;"  ".post;
+		(((beat-1)%numb) + 1).post;"  ".post;
 
 
-        if(beat % numb == 0, {
+		if(beat % numb == 0, {
 
-            " -- ".postln;
+			" -- ".postln;
 
-            Routine.run({
+			Routine.run({
 
-                s.sync;
+				s.sync;
 
-                ~rp.value;
+				~rp.value;
 
-                ~rp={};
+				~rp={};
 
 				numb = num;
 
-            });
+			});
 
-        });
-    };
+		});
+	};
 
-    t.schedAbs(
+	t.schedAbs(
 
-        0.00, // evaluate this immediately
-        {
-            arg ...args;
+		0.00, // evaluate this immediately
+		{
+			arg ...args;
 
-            timeloop.value(args[0]); // pass the beat number to our function
+			timeloop.value(args[0]); // pass the beat number to our function
 
-            1.0               // do it all again on the next beat
-    });
+			1.0               // do it all again on the next beat
+	});
 };

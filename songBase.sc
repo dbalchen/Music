@@ -25,10 +25,10 @@ o.memSize = 2097152;
 
 	(
 		// Put stuff here...........
-		~scale = Scale.majorPentatonic.degrees.collect({ arg item, i; item; item}) + 72;
+		~scale = Scale.majorPentatonic.degrees.collect({ arg item, i; item; item}) + 68;
 
 		~track0 = MyTrack.new(~synth1,0);
-		~track0.notes.probs = Bjorklund(15, 32);
+		~track0.notes.probs = Bjorklund(4, 4);
 		~track0.notes.freqs = ~track0.notes.probs.collect({ arg item, i; item; item*~scale.choose});
 
 	)

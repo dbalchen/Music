@@ -1,73 +1,67 @@
 // Song Template
 
 Server.default.makeGui;
+Help.gui
+Quarks.gui
+
+Server.supernova
+Server.scsynth
+
+s.boot;
+s.plotTree;
+s.meter;
+s.quit;
+
+Stethoscope.new(s);
+FreqScope.new(800, 400, 0, server: s);
+Server.default.makeGui;
+
+
+(
+o = Server.local.options;
+o.numOutputBusChannels = 32; // The next time it boots, this will take effect
+o.memSize = 2097152;
+s.latency = 0.00
+)
 
 "/home/dbalchen/Music/SuperCollider/include/setup.sc".load;
-
-// Let's do it.....
 "/home/dbalchen/Music/SuperCollider/include/functions/PitchClass.sc".load;
-"/home/dbalchen/Music/SuperCollider/include/functions/getMeasures.sc".load;
+"/home/dbalchen/Music/SuperCollider/include/Synths/dynOsc.sc".load;
 
 
-~mytrack = Track.new(~out0,0);
 
 /* Set up synth
 
-"/home/dbalchen/Music/SuperCollider/include/Synths/dynOsc.sc".load;
-
 ~dynOsc.value;
-
 ~mytrack.noteON = ~playDyno;
-
 ~vca.gui;
 ~vcf.gui;
 
-
-
 */
 
-t = TempoClock.default.tempo = 90/60;
+// Song Setup
 
-// Read Midi
-~midiFactory = MidiFactory.new("/home/dbalchen/Desktop/song9.mid");
+t = TempoClock.default.tempo = 140/60;
 
-// Get track 1
-~mynotes = ~midiFactory.getTrack(0,1);
+~scale = Scale.majorPentatonic.degrees.collect({ arg item, i; item; item}) + 68; // G Major
 
-~mynotes = ~mynotes.remove0waits
+~mytrack = Track.new(~out0,0);
+~mytrack.notes.freqs = Bjorklund(4, 4) * 35;
+~mytrack.notes = ~mytrack.notes.init;
 
-// ~mynotes.freqs
-
-
-// Play with Pitches
-
-~ff0 = ~mynotes.freqs.deepCopy;
-
-~f0 = ~ff0.deepCopy;
-
-~t0 = [0,2,3,5,7,9,10];
-~t1 = [0,10,9,7,5,3,2];
-
-~t1 = ~pitchClassTI.value(~t0 + 12,5);
-
-~f0 = ~pitchMap.value(~f0,~t0,~t1);
-
-~f0 = [ 72, 67, 70, 62, 72, 67, 70, 62 ];
-
-~mynotes.freqs = ~f0;
+// ~mytrack.notes.freqs = ~mytrack.notes.probs.collect({ arg item, i; item; item*~scale.choose});
 
 
-// Play with Rhythm
+/*
+* Transport
+*/
 
+~startTimer.value(90);
 
-// Load and play
+~rp = {
 
-~mytrack.notes = ~mynotes.init;
+	~mytrack.transport.play;~mytrack10.transport.play;~mytrack2.transport.play;
 
-// Transport commands
+	~mytrack.transport.stop;~mytrack10.transport.stop;~mytrack2.transport.stop;
 
-~mytrack.transport.play;
-
-~mytrack.transport.mute;
-
-~mytrack.transport.unmute;
+};

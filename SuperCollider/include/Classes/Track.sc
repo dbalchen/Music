@@ -94,7 +94,7 @@ Track {
 			\midiout, midiout,
 			\midicmd, \noteOn,
 			\note,  Pfunc.new({notes.freq.next}- 60),
-			\amp, Pfunc.new({notes.vels.next}),
+			\amp, Pfunc.new({notes.vel.next}),
 			\chan, channel,
 			\sustain, Pfunc.new({notes.duration.next}),
 			\dur, Pfunc.new({notes.wait.next})
