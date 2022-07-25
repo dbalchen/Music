@@ -14,7 +14,6 @@ s.quit;
 
 Stethoscope.new(s);
 FreqScope.new(800, 400, 0, server: s);
-Server.default.makeGui;
 
 
 (
@@ -22,7 +21,9 @@ o = Server.local.options;
 o.numOutputBusChannels = 32; // The next time it boots, this will take effect
 o.memSize = 2097152;
 s.latency = 0.00
-)~mynotes.init;
+);
+
+
 
 "/home/dbalchen/Music/SuperCollider/include/setup.sc".load;
 "/home/dbalchen/Music/SuperCollider/include/functions/PitchClass.sc".load;
@@ -51,13 +52,14 @@ t = TempoClock.default.tempo = 140/60;
 
 ~mytrack = Track.new(~out0,0);
 
-~mynotes = (~midiFactory.getTrack(3,5)).remove0waits;
+~mynotes = (~midiFactory.getTrack(4,6)).remove0waits;
 ~mynotes.vels = nil;
 ~mynotes = ~mynotes.init;
 
 ~mytrack.notes = ~mynotes.init;
 
 ~mytrack.notes.freqs
+
 
 ~mytrack.transport.play;
 
@@ -84,19 +86,31 @@ t = TempoClock.default.tempo = 140/60;
 };
 
 
-~get1 = (~midiFactory.getTrack(9,1)).remove0waits;
-~get1 = ~get1.getMeasure(1,2);
+~f0 = ~mynotes.freqs;
 
-~get1.freqs = ~get1.freqs * 0;
-~get1.waits = ~get1.waits*2;
-~get1.durations = nil;
-~get1.vels = nil;
-~get1 = ~get1.init;
 
-~mytrack.notes = ~get1.init;
+~fn = ~pitchMap.value(~f0,~t0,(~t0+1)%12);//.rotate(rrand(0, 16)));
 
-~myAdd = ~invAdd.value(~get1,~mynotes,~t0);
-~myAdd = ~myAdd.init;
+~fn = ~pitchMap.value(~f0,~t0,~t0.rotate(rrand(0, 16)));
 
-~myAdd.freqs;
-~mytrack.notes = ~myAdd.init;
+~mytrack.notes.freqs = ~fn;
+
+~mytrack.notes.freqs = ~f0;
+
+~roo = 0;
+(
+t = Task({
+    loop {
+        s.makeBundle(s.latency, {
+
+			~fn = ~pitchMap.value(~f0,~t0,~t0.rotate(~roo));
+			~roo = ~roo + 1;
+			~mytrack.notes.freqs = ~fn;
+
+        });
+        32.wait;
+    }
+}).play;
+)
+
+t.stop;

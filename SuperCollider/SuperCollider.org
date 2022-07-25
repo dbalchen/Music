@@ -1,5 +1,6 @@
 * Songs
 ** [[file:~/Music/song7/song7.sc][song7]]
+** [[file:~/Music/song8/song8.sc][song8]]
 ** [[file:~/Music/song9/song9.sc][song9]]
 ** [[file:~/Music/MuscleBone/include/patch/muscleBonesStrings.sc][Muscle and Bones Strings]]
 ** [[file:include/song_template.sc][Song Template]]
