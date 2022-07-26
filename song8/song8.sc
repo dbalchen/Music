@@ -52,7 +52,7 @@ t = TempoClock.default.tempo = 140/60;
 
 ~mytrack = Track.new(~out0,0);
 
-~mynotes = (~midiFactory.getTrack(4,6)).remove0waits;
+~mynotes = (~midiFactory.getTrack(7,6)).remove0waits;
 ~mynotes.vels = nil;
 ~mynotes = ~mynotes.init;
 
@@ -95,9 +95,9 @@ t = TempoClock.default.tempo = 140/60;
 
 ~mytrack.notes.freqs = ~fn;
 
-~mytrack.notes.freqs = ~f0;
+~mytrack.notes.freqs = ~f0//.reverse;
 
-~roo = 0;
+~roo = 1;
 (
 t = Task({
     loop {
