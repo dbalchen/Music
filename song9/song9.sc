@@ -34,6 +34,18 @@ t = TempoClock.default.tempo = 90/60;
 // Read Midi
 ~midiFactory = MidiFactory.new("/home/dbalchen/Desktop/song9.mid");
 
+~mynotes = (~midiFactory.getTrack(0,5)).remove0waits;
+~mynotes.vels = nil;
+~mynotes = ~mynotes.init;
+
+~mynotes2 = (~midiFactory.getTrack(2,2)).remove0waits;
+~mynotes2.vels = nil;
+~mynotes2 = ~mynotes2.init;
+
+~mynotes10 = (~midiFactory.getTrack(9,1)).remove0waits;
+~mynotes10.vels = nil;
+~mynotes10 = ~mynotes10.init;
+
 
 /*
 * Track 1
@@ -50,9 +62,8 @@ t = TempoClock.default.tempo = 90/60;
 
 // Get track 1
 
-~mynotes = (~midiFactory.getTrack(0,5)).remove0waits;
 
-~mytrack.notes = ~mynotes.init;
+~mytrack.notes = ~mynotes.deepCopy.init;
 
 ~mytrack.transport.play;
 
@@ -61,26 +72,63 @@ t = TempoClock.default.tempo = 90/60;
 ~mytrack.transport.unmute;
 
 /*
+* Track b
+*/
+
+
+~mytrackb = Track.new(~out0,4);
+
+~mytrackb.notes = ~mynotes.deepCopy.init;
+
+~mytrackb.transport.play;
+
+~mytrackb.transport.mute;
+
+~mytrackb.transport.unmute;
+
+
+
+/*
+* Track c
+*/
+
+
+~mytrackc = Track.new(~out0,5);
+
+~mytrackc.notes = ~mynotes.deepCopy.init;
+
+~mytrackc.transport.play;
+
+~mytrackc.transport.mute;
+
+~mytrackc.transport.unmute;
+
+/*
+* Track c
+*/
+
+	
+~mytrackd = Track.new(~out0,6);
+
+~mytrackd.notes = ~mynotes.deepCopy.init;
+
+~mytrackd.transport.play;
+
+~mytrackd.transport.mute;
+
+~mytrackd.transport.unmute;
+
+
+/*
 * Track 2
 */
-~mytrack2 = Track.new(~out0,1);
-
-// ~mynotes2 = ~mynotes.deepCopy;~tmp = ~mynotes.deepCopy;
-
-~mytrack.notes = ~tmp.init;
-
-
-~f0 = ~tmp.freqs;
-
-~t0 = [0,2,4,5,7,9,11];
-~ti = [0,11,9,7,5,4,2];
-~mynotes2 = ~midiFactory.getTrack(1,2).remove0waits;
+~mytrack2 = Track.new(~out0,2);
+	
+~mytrack2.notes = ~mynotes2.deepCopy.init;
 
 /*
 ** Load and play
 */
-
-~mytrack2.notes = ~mynotes2.init;
 
 ~mytrack2.transport.play;
 
@@ -88,23 +136,19 @@ t = TempoClock.default.tempo = 90/60;
 
 ~mytrack2.transport.unmute;
 
-
-
-
-
 /*
 * Track 10
 */
+
+
 ~mytrack10 = Track.new(~out0,9);
 
-~mynotes10 = ~midiFactory.getTrack(9,1);
-~mynotes10 = ~mynotes10.remove0waits;
+~mytrack10.notes = ~mynotes10.deepCopy.init;
+
 
 /*
 ** Load and play
 */
-
-~mytrack10.notes = ~mynotes10.init;
 
 ~mytrack10.transport.play;
 
@@ -122,10 +166,21 @@ t = TempoClock.default.tempo = 90/60;
 
 ~rp = {
 
-~mytrack.transport.play;~mytrack10.transport.play;~mytrack2.transport.play;
+		~mytrack.transport.play;
+	//	~mytrackb.transport.play;
+	//	~mytrackc.transport.play;
+	//	~mytrackd.transport.play;
+	//	~mytrack10.transport.play;
+	//	~mytrack2.transport.play;
 
-~mytrack.transport.stop;~mytrack10.transport.stop;~mytrack2.transport.stop;
-
+	/*
+    ~mytrack.transport.stop;
+	~mytrackb.transport.stop;
+	~mytrackc.transport.stop;
+	~mytrackd.transport.stop;
+	~mytrack10.transport.stop;
+	~mytrack2.transport.stop;
+	*/
 };
 
 
@@ -134,43 +189,54 @@ t = TempoClock.default.tempo = 90/60;
 * Freq Manipulation
 */
 
-~tmp = ~mynotes.deepCopy;
-
-~mytrack.notes = ~tmp.init;
 
 
-~f0 = ~tmp.freqs;
+~f0 = ~mynotes.freqs.deepCopy;
+
+~f0 = ~f1
 
 ~t0 = [0,2,4,5,7,9,11];
 ~ti = [0,11,9,7,5,4,2];
 
+// Inverse
 ~f1 = ~pitchMap.value(~f0,~t0,~ti);
 
-~f1 = ~pitchMap.value(~f0,~t0,~ti.rotate(3));
-
+// Retrograde
 ~f1 = ~pitchMap.value(~f0,~t0,~t0.reverse);
 
+// Retrograde Inversion
 ~f1 = ~pitchMap.value(~f0,~t0,~ti.reverse);
 
+// Pitch reverse
 ~f1 =  ~f0.reverse;
 
-~f1 = ~pitchMap.value(~f0,~t0,(~t0.rotate(5)));
+~f1 = ~pitchMap.value(~f0,~t0,~t0.rotate(3));
+	
+~mytrackb.notes.freqs = ~f1;
 
-~f1 = ~pitchMap.value(~f0,~t0,~t0.rotate(-4));
+~mytrackc.notes.freqs = ~f1;
 
-~f1 = ~pitchMap.value(~f0,~t0,~ti.rotate(5));
-
-~f1 = ~pitchMap.value(~f0,~t0,(~ti.rotate(7)));
+~mytrackd.notes.freqs = ~f0 - 12;
 
 
-~tmp.freqs = ~f1;
+~mytrack.notes.freqs = ~f1;
 
-~tmp2 = ~tmp.deepCopy;
-
-~tmp2 = ~tmp2.merge(~tmp);
+~mytrack.notes.freqs = ~f0;
 
 
 
+// 
+motif 3,5,6,4 
+inverse 3,5,2,6
+
+// Best harmonies
+mot 3,5,4
+inv 3,2,4
+
+// best H groups
+3,5,-2
+4,2,-2
+	
 ////// Filter Synth settings
 
 ~dsvca = MyADSR.new(1.05,2.3,0.2,0.6,"VCA");

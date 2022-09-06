@@ -52,7 +52,7 @@ t = TempoClock.default.tempo = 140/60;
 
 ~mytrack = Track.new(~out0,0);
 
-~mynotes = (~midiFactory.getTrack(7,6)).remove0waits;
+~mynotes = (~midiFactory.getTrack(0,2)).remove0waits;
 ~mynotes.vels = nil;
 ~mynotes = ~mynotes.init;
 
@@ -73,7 +73,13 @@ t = TempoClock.default.tempo = 140/60;
 * Transport
 */
 
+~track16 =  Track.new(~out0,15);
+~track16.noteON = { 
+
 ~startTimer.value(140);
+
+}
+
 
 ~rp = {
 
@@ -87,13 +93,6 @@ t = TempoClock.default.tempo = 140/60;
 
 
 ~f0 = ~mynotes.freqs;
-
-
-~fn = ~pitchMap.value(~f0,~t0,(~t0+1)%12);//.rotate(rrand(0, 16)));
-
-~fn = ~pitchMap.value(~f0,~t0,~t0.rotate(rrand(0, 16)));
-
-~mytrack.notes.freqs = ~fn;
 
 ~mytrack.notes.freqs = ~f0//.reverse;
 
@@ -114,3 +113,7 @@ t = Task({
 )
 
 t.stop;
+
+
+
+Platform.userExtensionDir

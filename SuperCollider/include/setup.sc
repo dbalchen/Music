@@ -36,7 +36,7 @@
 
 ~startTimer = {arg bpm = 60, num = 4;
 
-	var timeloop,numb;
+	var numb,timeloop;
 
 	numb = num;
 
@@ -50,22 +50,15 @@
 
 		(((beat-1)%numb) + 1).post;"  ".post;
 
-
 		if(beat % numb == 0, {
 
 			" -- ".postln;
-
-			Routine.run({
-
-				s.sync;
 
 				~rp.value;
 
 				~rp={};
 
 				numb = num;
-
-			});
 
 		});
 	};
