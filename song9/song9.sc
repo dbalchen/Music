@@ -170,8 +170,8 @@ t = TempoClock.default.tempo = 90/60;
 	//	~mytrackb.transport.play;
 	//	~mytrackc.transport.play;
 	//	~mytrackd.transport.play;
-	//	~mytrack10.transport.play;
-	//	~mytrack2.transport.play;
+		~mytrack10.transport.play;
+		~mytrack2.transport.play;
 
 	/*
     ~mytrack.transport.stop;
@@ -236,7 +236,20 @@ inv 3,2,4
 // best H groups
 3,5,-2
 4,2,-2
-	
+
+
+//
+
+~h0 = ~mynotes2.deepCopy.init;
+~h0.freqs = ~h0.freqs * 0;
+~h0 = ~h0.init;
+
+~h0 = ~invAdd.value(~h0,~mynotes,~t0);
+~mytrack.
+
+
+~mytrack.notes.replace(~h0);
+
 ////// Filter Synth settings
 
 ~dsvca = MyADSR.new(1.05,2.3,0.2,0.6,"VCA");
