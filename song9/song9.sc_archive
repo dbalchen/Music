@@ -233,3 +233,118 @@ Archived entries from file /home/dbalchen/Music/song9/song9.sc
 
 	m;
 };
+
+* Read Midi
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-10-11 Wed 17:16
+:ARCHIVE_FILE: ~/Music/song9/song9.sc
+:ARCHIVE_OLPATH: The Song
+:ARCHIVE_CATEGORY: song9
+:END:
+~midiFactory = MidiFactory.new("/home/dbalchen/Desktop/song9.mid");
+
+~mynotes = (~midiFactory.getTrack(0,5)).remove0waits;
+~mynotes.vels = nil;
+~mynotes.waits;
+
+~mynotes = Notes.new;
+~mynotes.waits = [1.0,1.0,1.0,1.0,1.0,2.0,1.0,1.0,1.0,1.0,1.0,1.0,3.0,1.0,1.0,1.5,0.5,1.0,2.0,1.0,1.0,1.0,1.0,0.5,0.5,1.0,3.0]; 
+
+~mynotes.freqs = [69,72,62,64,64,60,64,64,60,69,71,71,67,71,64,67,64,62,64,65,65,69,62,60,72,71,67];
+~mynotes.probs = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+~mynotes.durations = [0.94,0.94,0.94,0.94,0.94,1.93,0.94,0.94,0.94,0.94,0.94,0.94,2.94,0.94,0.94,1.44,0.44,0.94,1.94,0.94,0.94,0.94,0.94,0.44,0.44,0.94,2.94];
+~mynotes.vels = [127,127,127,127,127,127,127,127,127,127,127,127,127,127,127,127,100,127,127,127,127,127,127,127,127,127,127];
+
+~mynotes = ~mynotes.init;
+
+/*.
+~mynotesB = (~midiFactory.getTrack(1,4)).remove0waits;
+~mynotesB.vels = nil;
+~mynotesB = ~mynotesB.init;
+*/
+
+~mynotes2 = (~midiFactory.getTrack(4,6)).remove0waits;
+~mynotes2.vels = nil;
+~mynotes2.waits;>
+~mynotes2 = ~mynotes2.init;
+
+/*
+~mynotes2B = (~midiFactory.getTrack(2,2)).remove0waits;
+~mynotes2B.vels = nil;
+~mynotes2B = ~mynotes2B.init;
+*/
+
+~mynotes10 = (~midiFactory.getTrack(10,7)).remove0waits;
+~mynotes10.vels = nil;
+~mynotes10 = ~mynotes10.init;
+
+/*
+
+* Track b
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-10-11 Wed 17:17
+:ARCHIVE_FILE: ~/Music/song9/song9.sc
+:ARCHIVE_OLPATH: Track 1
+:ARCHIVE_CATEGORY: song9
+:END:
+*/
+
+
+~mytrackb = Track.new(~out0,1);
+
+~mytrackb.notes = ~mynotes.deepCopy.init;
+
+~mytrackb.transport.play;
+
+~mytrackb.transport.mute;
+
+~mytrackb.transport.unmute;
+
+
+
+/*
+
+* Track c
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-10-11 Wed 17:17
+:ARCHIVE_FILE: ~/Music/song9/song9.sc
+:ARCHIVE_OLPATH: Track 1
+:ARCHIVE_CATEGORY: song9
+:END:
+*/
+
+
+~mytrackc = Track.new(~out0,5);
+
+~mytrackc.notes = ~mynotes.deepCopy.init;
+
+~mytrackc.transport.play;
+...
+~mytrackc.transport.mute;
+
+~mytrackc.transport.unmute;
+
+/*
+
+* Track d
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-10-11 Wed 17:17
+:ARCHIVE_FILE: ~/Music/song9/song9.sc
+:ARCHIVE_OLPATH: Track 1
+:ARCHIVE_CATEGORY: song9
+:END:
+*/
+
+
+~mytrackd = Track.new(~out0,6);
+
+~mytrackd.notes = ~mynotes.deepCopy.init;
+
+~mytrackd.transport.play;
+
+~mytrackd.transport.mute;
+
+~mytrackd.transport.unmute;
+
+
+/*

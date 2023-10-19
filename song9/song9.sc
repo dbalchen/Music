@@ -5,6 +5,7 @@ Server.default.makeGui;
 
 "/home/dbalchen/Music/SuperCollider/include/setup.sc".load;
 
+
 // Pitch Libraries
 
 "/home/dbalchen/Music/SuperCollider/include/functions/PitchClass.sc".load;
@@ -28,30 +29,17 @@ Server.default.makeGui;
 * The Song
 */
 
+"/home/dbalchen/Music/song9/song9.notes.sc".load;
+
 // Tempo
 t = TempoClock.default.tempo = 90/60;
 
-// Read Midi
-~midiFactory = MidiFactory.new("/home/dbalchen/Desktop/song9.mid");
 
-~mynotes = (~midiFactory.getTrack(0,5)).remove0waits;
-~mynotes.vels = nil;
-~mynotes = ~mynotes.init;
-
-~mynotes2 = (~midiFactory.getTrack(2,2)).remove0waits;
-~mynotes2.vels = nil;
-~mynotes2 = ~mynotes2.init;
-
-~mynotes10 = (~midiFactory.getTrack(9,1)).remove0waits;
-~mynotes10.vels = nil;
-~mynotes10 = ~mynotes10.init;
-
-
-/*
 * Track 1
+
 */
 
-~mytrack = Track.new(~out0,0);
+~mytrack = Track.new(~out1,0);
 
 /*
 
@@ -63,7 +51,7 @@ t = TempoClock.default.tempo = 90/60;
 // Get track 1
 
 
-~mytrack.notes = ~mynotes.deepCopy.init;
+~mytrack.notes = ~main_theme.deepCopy.init;
 
 ~mytrack.transport.play;
 
@@ -72,59 +60,11 @@ t = TempoClock.default.tempo = 90/60;
 ~mytrack.transport.unmute;
 
 /*
-* Track b
-*/
-
-
-~mytrackb = Track.new(~out0,4);
-
-~mytrackb.notes = ~mynotes.deepCopy.init;
-
-~mytrackb.transport.play;
-
-~mytrackb.transport.mute;
-
-~mytrackb.transport.unmute;
-
-
-
-/*
-* Track c
-*/
-
-
-~mytrackc = Track.new(~out0,5);
-
-~mytrackc.notes = ~mynotes.deepCopy.init;
-
-~mytrackc.transport.play;
-
-~mytrackc.transport.mute;
-
-~mytrackc.transport.unmute;
-
-/*
-* Track c
-*/
-
-	
-~mytrackd = Track.new(~out0,6);
-
-~mytrackd.notes = ~mynotes.deepCopy.init;
-
-~mytrackd.transport.play;
-
-~mytrackd.transport.mute;
-
-~mytrackd.transport.unmute;
-
-
-/*
 * Track 2
 */
 ~mytrack2 = Track.new(~out0,2);
-	
-~mytrack2.notes = ~mynotes2.deepCopy.init;
+
+~mytrack2.notes = ~bass.deepCopy.init;
 
 /*
 ** Load and play
@@ -136,19 +76,12 @@ t = TempoClock.default.tempo = 90/60;
 
 ~mytrack2.transport.unmute;
 
-/*
-* Track 10
-*/
 
 
-~mytrack10 = Track.new(~out0,9);
 
-~mytrack10.notes = ~mynotes10.deepCopy.init;
+~mytrack10 = Track.new(~out0,9); // Notice ~out1 not ~out0
 
-
-/*
-** Load and play
-*/
+~mytrack10.notes = ~drumbasic.deepCopy.init;
 
 ~mytrack10.transport.play;
 
@@ -156,33 +89,54 @@ t = TempoClock.default.tempo = 90/60;
 
 ~mytrack10.transport.unmute;
 
+/*
+* Audio Bass 1
+*/
 
+~bass1.free;~bass2.free;
+
+~bass1 = Buffer.read(s, "/home/dbalchen/Music/song9/include/audio/Loop1_Bass Bus.wav"); // remember to free the buffer later.
+~bass2 = Buffer.read(s, "/home/dbalchen/Music/song9/include/audio/Loop2_Bass Bus.wav"); // remember to free the buffer later.
+var synth = ~dynOsc.value("bsampler",osc: ~eSample);
+~bs = Synth(synth);
+~bs.set(\bufnum,~bass1);
+~bs.set(\amp,0.5);
+
+
+~bs.set(\gate,1);
+
+~bs.set(\gate,0);
 
 /*
 * Transport
 */
-
+~rp = {"Tits UP".postln;}
 ~startTimer.value(90);
+
 
 ~rp = {
 
-		~mytrack.transport.play;
+	 ~mytrack.transport.play;
+	~mytrack10.transport.play;
+	~mytrack2.transport.play;
+	
 	//	~mytrackb.transport.play;
-	//	~mytrackc.transport.play;
-	//	~mytrackd.transport.play;
-		~mytrack10.transport.play;
-		~mytrack2.transport.play;
+	//~mytrackc.transport.play;
+	//~mytrackd.transport.play;
+	// ~bs.set(\gate,1);
 
-	/*
-    ~mytrack.transport.stop;
-	~mytrackb.transport.stop;
-	~mytrackc.transport.stop;
-	~mytrackd.transport.stop;
-	~mytrack10.transport.stop;
-	~mytrack2.transport.stop;
-	*/
+
+	//
+	//
+	//	~mytrack.transport.stop;
+	// ~mytrackb.transport.stop;
+	// ~mytrackc.transport.stop;
+	// ~mytrackd.transport.stop;
+	//	~mytrack10.transport.stop;
+	//	~mytrack2.transport.stop;
+	// ~bs.set(\gate,0);
+
 };
-
 
 
 /*
@@ -191,9 +145,9 @@ t = TempoClock.default.tempo = 90/60;
 
 
 
-~f0 = ~mynotes.freqs.deepCopy;
+~f0 = ~main_theme.freqs.deepCopy;
 
-~f0 = ~f1
+// ~f0 = ~f1
 
 ~t0 = [0,2,4,5,7,9,11];
 ~ti = [0,11,9,7,5,4,2];
@@ -204,29 +158,55 @@ t = TempoClock.default.tempo = 90/60;
 // Retrograde
 ~f1 = ~pitchMap.value(~f0,~t0,~t0.reverse);
 
-// Retrograde Inversion
+~// Retrograde Inversionp
 ~f1 = ~pitchMap.value(~f0,~t0,~ti.reverse);
 
 // Pitch reverse
 ~f1 =  ~f0.reverse;
 
+// 3rd
+~f1 = ~pitchMap.value(~f0,~t0,~t0.rotate();
+
+// 5th
 ~f1 = ~pitchMap.value(~f0,~t0,~t0.rotate(3));
+
 	
+// Run Transpose
+~roo = 1;
+(
+t = Task({
+	loop {
+		s.makeBundle(s.latency, {
+
+			~fn = ~pitchMap.value(~f0,~t0,~t0.rotate(~roo));
+			~roo = ~roo + 1;
+			~mytrack.notes.freqs = ~fn;
+
+		});
+		32.wait;
+	}
+}).play;
+)
+
+t.stop;
+
+~t0.rotate(3)
+
+~f1 = ~pitchMap.value(~f0,~t0,~t0.rotate(2));
+
 ~mytrackb.notes.freqs = ~f1;
 
 ~mytrackc.notes.freqs = ~f1;
 
 ~mytrackd.notes.freqs = ~f0 - 12;
-
+*/
 
 ~mytrack.notes.freqs = ~f1;
 
 ~mytrack.notes.freqs = ~f0;
 
-
-
-// 
-motif 3,5,6,4 
+//
+motif 3,5,6,4
 inverse 3,5,2,6
 
 // Best harmonies
@@ -237,27 +217,41 @@ inv 3,2,4
 3,5,-2
 4,2,-2
 
-
+`
 //
 
-~h0 = ~mynotes2.deepCopy.init;
-~h0.freqs = ~h0.freqs * 0;
-~h0 = ~h0.init;
-
-~h0 = ~invAdd.value(~h0,~mynotes,~t0);
-~mytrack.
-
-
+~h0 =  ~mynotes.merge(~mynotes);
 ~mytrack.notes.replace(~h0);
 
-////// Filter Synth settings
+
+~h1 =  ~mynotes.deepCopy.init;
+~h1.waits = ~h1.waits*2;
+~h1.durations = nil;
+~h1 = ~h1.init;
+
+~h1.freqs;
+~h1.waits;
+~h1.durations;
+
+~ht = ~invAdd.value(~h0,~h1,~t0);
+
+
+~mytrack.notes.replace(~ht);
+
+~mytrack.notes.replace(~mynotes.deepCopy.init);
+
+
+~f0 = ~ht.freqs.deepCopy;
+
+~f1 = [ 67, 71, 64, 65, 69, 65, 60, 62, 69, 65, 67, 62, 71, 65, 67, 69, 60, 62, 69, 65, 60, 67, 64, 60, 62, 71, 60, 69, 60, 65, 67, 64, 60, 67, 60, 69, 65, 67, 62, 71, 65, 60, 64, 67, 69, 64, 60, 65, 65, 62, 71, 67, 67, 88 ];
+
+/*
+* Synth settings
+*/
 
 ~dsvca = MyADSR.new(1.05,2.3,0.2,0.6,"VCA");
 ~dsvca.gui;
 ~dsvcf = MyADSR.new(2.35,1.35,0.04,0.7,"VCF");
-
-
-
 
 ~dstrings =
 {
@@ -299,9 +293,14 @@ inv 3,2,4
 ~dynOsc.value("dStrings",osc: ~dstrings);
 
 ~playDstrings = {arg num, vel = 1, chan, src, out = 0, amp = 1, balance = 0, synth = "dStrings", vca = ~dsvca, vcf = ~dsvcf;
-	~playDyno.value(num, vel, chan, src, out, amp, balance,synth, vca, vcf);
+	~playDyno.value(num, vel, chan, src, out, amp, balance,synth, vca, vcf,0, 1.0, 60,1);
 };
 
 ~mytrack = Track.new(~out0,0);
 ~mytrack.noteON = ~playDstrings;
+
+
+
+
+
 
