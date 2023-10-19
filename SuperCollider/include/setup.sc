@@ -17,16 +17,16 @@
 ~midiSetup.value;
 
 ~out0 = MIDIOut(0);
-~out0.latency = 0;
+~out0.latency = 0.0;
 
 ~out1 = MIDIOut(1);
-~out1.latency = 0;
+~out1.latency = 0.0;
 
 ~out2 = MIDIOut(2);
-~out2.latency = 0;
+~out2.latency = 0.0;
 
 ~out3 = MIDIOut(3);
-~out3.latency = 0;
+~out3.latency = 0.0;
 
 //~displayCC.free;
 //~displayCC = MIDIdef.cc(\displayCC, {arg ...args; args.postln}); // display CC
@@ -54,7 +54,7 @@
 
 			" -- ".postln;
 
-				~rp.value;
+				~rp.fork.value;
 
 				~rp={};
 

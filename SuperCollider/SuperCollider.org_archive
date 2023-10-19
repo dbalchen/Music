@@ -1439,3 +1439,28 @@ SynthDef("formant", {
 
 
 
+
+* [[file:include/Synths/eSampler.sc][eSampler]]
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-09-26 Tue 11:42
+:ARCHIVE_FILE: ~/Music/SuperCollider/SuperCollider.org
+:ARCHIVE_OLPATH: SuperCollider/SynthDev
+:ARCHIVE_CATEGORY: SuperCollider
+:END:
+
+* [[file:include/Synths/evenVCO.sc][evenVCO]]
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-09-26 Tue 11:45
+:ARCHIVE_FILE: ~/Music/SuperCollider/SuperCollider.org
+:ARCHIVE_OLPATH: SuperCollider/SynthDev
+:ARCHIVE_CATEGORY: SuperCollider
+:END:
+** [[file:include/Synths/evenVCOmono.sc][evenVCO (Mono)]]
+
+* [[file:include/Synths/eStrings.sc][eStrings]]
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-09-26 Tue 11:50
+:ARCHIVE_FILE: ~/Music/SuperCollider/SuperCollider.org
+:ARCHIVE_OLPATH: SuperCollider/SynthDev
+:ARCHIVE_CATEGORY: SuperCollider
+:END:
