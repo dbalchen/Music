@@ -2,6 +2,7 @@
 ** [[file:~/Music/song7/song7.sc][song7]]
 ** [[file:~/Music/song8/song8.sc][song8]]
 ** [[file:~/Music/song9/song9.sc][song9]]
+*** [[file:~/Music/song9/song9.notes.sc][Song9notes]]
 ** [[file:~/Music/MuscleBone/include/patch/muscleBonesStrings.sc][Muscle and Bones Strings]]
 ** [[file:include/song_template.sc][Song Template]]
 * SuperCollider
@@ -20,3 +21,8 @@
 *** [[file:include/Classes/MyADSR.sc][MyADSR]]
 **** [[file:include/functions/PitchClass.sc][PitchClass]]
 ** Program Utilities
+*** [[file:~/workspace/RoboComp/midi2notes.py][midi2notes]]
+    Convert a midi file into myNotes.
+*** [[file:~/workspace/RoboComp/pitchmap.py][pitchmap]]
+    Batch pitchmapper
+    

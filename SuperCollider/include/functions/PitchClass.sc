@@ -18,7 +18,7 @@
 
 
 ~pitchMap = {
-	arg fn , p0, pI;
+	arg fn , p0, pI, high = 120, low = 0, center = 60;
 	var newP = [];
 
 	fn.do(
@@ -37,17 +37,37 @@
 
 			if(noteIdx != nil,
 				{
-					newP = newP.add(pI.at(noteIdx));
+					note = pI.at(noteIdx);
+					//					newP = newP.add(pI.at(noteIdx));
 				},
 				{
-					newP = newP.add(note);
+					note = note;
+					//					newP = newP.add(note);
 				}
 			);
 
+			note = note + center;
+		
+			if(note > high,
+				{
+					note = note - 12;
+				}
+
+			);
+
+			if(note < low,
+				{
+					note = note + 12;
+				}
+
+			);
+
+			newP = newP.add(note);
+			
 		}
 	);
 
-	newP + 60;
+	newP;
 };
 
 /*

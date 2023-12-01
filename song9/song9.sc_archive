@@ -348,3 +348,51 @@ Archived entries from file /home/dbalchen/Music/song9/song9.sc
 
 
 /*
+
+* Archive for now
+:PROPERTIES:
+:ARCHIVE_TIME: 2023-12-01 Fri 10:30
+:ARCHIVE_FILE: ~/Music/song9/song9.sc
+:ARCHIVE_OLPATH: Song 9
+:ARCHIVE_CATEGORY: song9
+:END:
+motif 3,5,6,4
+inverse 3,5,2,6
+
+// Best harmonies
+mot 3,5,4
+inv 3,2,4
+
+// best H groups
+3,5,-2
+4,2,-2
+
+`
+//
+
+~h0 =  ~mynotes.merge(~mynotes);
+~mytrack.notes.replace(~h0);
+
+
+~h1 =  ~mynotes.deepCopy.init;
+~h1.waits = ~h1.waits*2;
+~h1.durations = nil;
+~h1 = ~h1.init;
+
+~h1.freqs;
+~h1.waits;
+~h1.durations;
+
+~ht = ~invAdd.value(~h0,~h1,~t0);
+
+
+~mytrack.notes.replace(~ht);
+
+~mytrack.notes.replace(~mynotes.deepCopy.init);
+
+
+~f0 = ~ht.freqs.deepCopy;
+
+~f1 = [ 67, 71, 64, 65, 69, 65, 60, 62, 69, 65, 67, 62, 71, 65, 67, 69, 60, 62, 69, 65, 60, 67, 64, 60, 62, 71, 60, 69, 60, 65, 67, 64, 60, 67, 60, 69, 65, 67, 62, 71, 65, 60, 64, 67, 69, 64, 60, 65, 65, 62, 71, 67, 67, 88 ];
+
+/*
