@@ -69,15 +69,13 @@ SynthDef("basicSynthW", { arg ss = 0, freq = 55, out = 0, amp = 0.75, da = 2, ga
 };
 
 
-
-
 SynthDef("basicOsc", { arg freq = 55, out = 0, bend = 0, lagtime = 0.25;
 	var sig;
 
 	sig =  ((0.35*SinOsc.ar(Lag.kr(freq,lagtime),0)) + (0.5*Saw.ar(Lag.kr(freq,lagtime))));
-	
+
     sig = Pan2.ar(sig);
-	
+
 	Out.ar(out,sig);
 
 }).store;
@@ -95,7 +93,7 @@ SynthDef("monoPolySynth", { arg sigIn = 0, out = 0, amp = 1.2, da = 2, gate = 0,
 	env = EnvGen.kr(env, gate: gate, doneAction:da);
 	env = voc*(env - 1) + 1;
 
-	
+
 	fenv = Env.adsr(fattack,fdecay,fsustain,frelease);
 	fenv = EnvGen.kr(fenv, gate,doneAction:da);
 	fenv = aoc*(fenv - 1) + 1;

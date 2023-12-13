@@ -9,6 +9,7 @@
 ** [[file:include/superInit.sc][SuperColliderInit]]
 ** [[file:include/setup.sc][Setup]]
 ** SynthDev
+*** [[file:include/Synths/protopiano.sc][ProtoPiano]]
 *** [[file:include/Synths/dynOsc.sc][DynOsc]]
 *** [[file:/home/dbalchen/Music/SuperCollider/include/Synths/fmWorkspace.sc][FM Workspace]]
 *** [[file:include/Synths/basic.sc][Basic Synth]]

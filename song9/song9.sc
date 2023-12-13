@@ -33,8 +33,8 @@ Server.default.makeGui;
 
 /*
 ** Track 1
-   Lead Track
-  
+Lead Track
+
 *** Define Track and the notes to play
 */
 
@@ -60,8 +60,8 @@ Server.default.makeGui;
 
 /*
 ** Track 2
-   Bass Track
-  
+Bass Track
+
 *** Define Track and the notes to play
 
 */
@@ -83,7 +83,7 @@ Server.default.makeGui;
 
 /*
 ** Track 10
-   The drum track
+The drum track
 
 *** Define Track and the notes to play
 */
@@ -104,7 +104,7 @@ Server.default.makeGui;
 
 /*
 ** Audio Bass 1
-   Use this as a template to read in a audio buffer
+Use this as a template to read in a audio buffer
 */
 
 ~bass1.free;~bass2.free;
@@ -134,7 +134,7 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 	//	~mytrack10.transport.play;
 	//	~mytrack2.transport.play;
 	//  ~bs.set(\gate,1);
-	
+
 	//	~mytrackb.transport.play;
 	//	~mytrackc.transport.play;
 	//  ~mytrackd.transport.play;
@@ -143,7 +143,7 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 	//	~mytrack10.transport.stop;
 	//	~mytrack2.transport.stop;
 	//  ~bs.set(\gate,0);
-	
+
 	// ~mytrackb.transport.stop;
 	// ~mytrackc.transport.stop;
 	// ~mytrackd.transport.stop;
@@ -161,8 +161,8 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 
 /*
 *** Pitch classes
-   - t0 Current pitch class
-   - ti Inverse Pitch class
+- t0 Current pitch class
+- ti Inverse Pitch class
 */
 
 ~t0 = [0,2,4,5,7,9,11];
@@ -269,7 +269,7 @@ t.stop;
 ~dsvcf = MyADSR.new(2.35,1.35,0.04,0.7,"VCF");
 
 /*
-*** first synth function 
+*** first synth function
 */
 ~dstrings =
 {
@@ -289,7 +289,7 @@ t.stop;
 };
 
 /*
-*** second synth function 
+*** second synth function
 */
 
 ~fmstrings =

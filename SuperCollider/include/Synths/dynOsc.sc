@@ -3,100 +3,102 @@
 // =====================================================================
 
 ~adsr = {
-    arg gate = 0, attack = 0.10, decay = 0.10, sustain = 0.9, release = 0.1 , voc = 1;
+	arg gate = 0, attack = 0.10, decay = 0.10, sustain = 0.9, release = 0.1 , voc = 1;
 
-    var env = Env.adsr(attack,decay,sustain,release);
+	var env = Env.adsr(attack,decay,sustain,release);
 
-    env = EnvGen.ar(env, gate: gate, doneAction:2);
+	env = EnvGen.ar(env, gate: gate, doneAction:2);
 
-    env = voc*(env - 1) + 1;
+	env = voc*(env - 1) + 1;
 
-    env;
+	env;
 };
 
 ~fadsr = {
-    arg gate = 0, fattack = 0.10, fdecay = 0.10, fsustain = 0.9, frelease = 0.1, aoc = 1;
+	arg gate = 0, fattack = 0.10, fdecay = 0.10, fsustain = 0.9, frelease = 0.1, aoc = 1;
 
-    var env = ~adsr.value(gate, fattack, fdecay, fsustain, frelease, aoc);
+	var env = ~adsr.value(gate, fattack, fdecay, fsustain, frelease, aoc);
 
-    env;
+	env;
 };
 
 
 ~evenVCO = {
-    arg gate = 0, freq = 220, lagtime = 0, bend = 0;
+	arg gate = 0, freq = 220, lagtime = 0, bend = 0;
 
-    var sig;
+	var sig;
 
-    freq = Lag.kr(freq,lagtime);
+	freq = Lag.kr(freq,lagtime);
 
-    freq = 1.5*SinOsc.kr(8) + freq;
+	freq = 1.5*SinOsc.kr(8) + freq;
 
-    freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!8;
+	freq = {freq * bend.midiratio * LFNoise2.ar(2.5,0.01,1)}!8;
 
-    sig = (0.35*SinOsc.ar(freq,0) + 0.5*Saw.ar(2*freq));
+	sig = (0.35*SinOsc.ar(freq,0) + 0.5*Saw.ar(2*freq));
 
-    sig;
+	sig;
 };
 
 
 
 ~eSample = {
-    arg gate = 0,bufnum = 0, midinum = 60, rate = 1.0, basef = 60, looper = 1;
+	arg gate = 0,bufnum = 0, midinum = 60, rate = 1.0, basef = 60, looper = 1;
 
-    var sig,i;
+	var sig,i;
 
-    i = midinum.midicps/basef.midicps;
+	i = midinum.midicps/basef.midicps;
 
-    sig = PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum)*rate*i,gate,0,loop:looper, doneAction:2);
+	sig = PlayBuf.ar(2, bufnum, BufRateScale.kr(bufnum)*rate*i,gate,0,loop:looper, doneAction:2);
 
-    sig;
+	sig;
 };
 
 
 
 ~moogFilter = {
-    arg sig, env, cutoff = 12000, gain = 0.25 ;
+	arg sig, env, cutoff = 12000, gain = 0.25 ;
 
-    sig = MoogFF.ar(sig,cutoff*env, gain);
+	sig = MoogFF.ar(sig,cutoff*env, gain);
 
-    sig;
+	sig;
 };
 
 
 ~dfm1Filter = {
-    arg sig, env, cutoff = 12000, gain = 0.25 ;
+	arg sig, env, cutoff = 12000, gain = 0.25 ;
 
-    sig = DFM1.ar(sig,cutoff*env, gain);
+	sig = DFM1.ar(sig,cutoff*env, gain);
 
-    sig;
+	sig;
 };
 
 ~dynOsc = {
-    arg name = "nbasicSynth", adsr = ~adsr, fdsr = ~fadsr, osc = ~evenVCO, filter = ~moogFilter;
+	arg name = "nbasicSynth", adsr = ~adsr, fdsr = ~fadsr, osc = ~evenVCO, filter = ~moogFilter;
 
-    SynthDef(name, {
-        arg	out = 0, amp = 1.0, spread = 1, balance = 0, gate = 0, hpf = 128;
+	SynthDef(name, {
+		arg	out = 0, amp = 1.0, spread = 1, balance = 0, gate = 0, hpf = 55.0;
 
-        var sig, env, fenv;
+		var sig, env, fenv;
 
-        env = SynthDef.wrap(adsr,nil,prependArgs: [gate]);
-        sig = SynthDef.wrap(osc,nil,prependArgs: [gate])*env;
+		env = SynthDef.wrap(adsr,nil,prependArgs: [gate]);
 
-        fenv = SynthDef.wrap(fdsr,nil,prependArgs: [gate]);
-        sig = SynthDef.wrap(filter,nil, prependArgs: [sig,fenv]);
+		sig = SynthDef.wrap(osc,nil,prependArgs: [gate])*env;
 
-        sig = HPF.ar(sig,hpf);
+		fenv = SynthDef.wrap(fdsr,nil,prependArgs: [gate]);
 
-        sig = LeakDC.ar(sig);
+		sig = SynthDef.wrap(filter,nil, prependArgs: [sig,fenv]);
 
-        sig = Splay.ar(sig,spread,center:balance);
+		sig = HPF.ar(sig,hpf);
 
-        Out.ar(out,sig * amp);
+		sig = LeakDC.ar(sig);
 
-    }).add;
+		sig = Splay.ar(sig,spread,center:balance);
 
-    name;
+		Out.ar(out,sig * amp);
+
+	}).add;
+
+	name;
 };
 
 ~vca = MyADSR.new(0.5,0.50,0.7,0.5,"VCA");
@@ -104,41 +106,41 @@
 ~vcf = MyADSR.new(0.5,0.50,0.7,0.6,"VCF");
 
 
-~playDyno = {arg num, vel = 127, chan, src, out = 0, amp = 1, balance = 0, spread = 1, synth = "nbasicSynth", vca = ~vca, vcf = ~vcf, buffer = 0, rate = 1.0, basef = 60, looper = 1;
-    var ret;
+~playDyno = {arg num, vel = 127, chan, src, out = 0, amp = 1, balance = 0, spread = 1, synth = "nbasicSynth", vca = ~vca, vcf = ~vcf, voc = 1, aoc = 1, cutoff = 12000, gain = 0.1, buffer = 0, rate = 1.0, basef = 60, looper = 1;
+	var ret;
 
-    ret = Synth(synth);
-    vel = (vel/127);
-    ret.set(\amp,amp*vel);
+	ret = Synth(synth);
+	vel = (vel/127);
+	ret.set(\amp,amp*vel);
 
-    ret.set(\out,out);
+	ret.set(\out,out);
 
-    ret.set(\balance,balance);
-    ret.set(\spread,spread);
+	ret.set(\balance,balance);
+	ret.set(\spread,spread);
 
-    vca.setADSR(ret);
+	vca.setADSR(ret);
 
-    ret.set(\freq,num.midicps);
-    ret.set(\midinum,num);
+	ret.set(\freq,num.midicps);
+	ret.set(\midinum,num);
 
-    ret.set(\bufnum,buffer);
-    ret.set(\rate,rate);
-    ret.set(\basef,basef);
-    ret.set(\looper,looper);
+	ret.set(\bufnum,buffer);
+	ret.set(\rate,rate);
+	ret.set(\basef,basef);
+	ret.set(\looper,looper);
 
-    ret.set(\voc,1.0);
-    ret.set(\lagtime,0);
-    ret.set(\bend,0);
+	ret.set(\voc,voc);
+	ret.set(\lagtime,0);
+	ret.set(\bend,0);
 
-    vcf.setfADSR(ret);
-    ret.set(\cutoff,8000);
-    ret.set(\gain,0.92);
-    ret.set(\aoc,0.75);
+	vcf.setfADSR(ret);
+	ret.set(\cutoff,cutoff);
+	ret.set(\gain,gain);
+	ret.set(\aoc,aoc);
 
-    ret.set(\hpf,32.5);
-    ret.set(\gate,1);
+	ret.set(\hpf,32.5);
+	ret.set(\gate,1);
 
-    ret;
+	ret;
 };
 
 /*
