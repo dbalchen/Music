@@ -17,6 +17,9 @@ Server.default.makeGui;
 ** Set up a synth
 
 "/home/dbalchen/Music/SuperCollider/include/Synths/dynOsc.sc".load;
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with C-x C-f and enter text in its buffer.
+
 
 ~dynOsc.value;
 
@@ -29,7 +32,7 @@ Server.default.makeGui;
 ** The Song
 */
 
-"/home/dbalchen/Music/song9/song9.notes.sc".load;
+"/home/dbalchen/Music/song9/song9b.notes.sc".load;
 
 /*
 ** Track 1
@@ -40,7 +43,7 @@ Lead Track
 
 ~mytrack = Track.new(~out0,0);
 
-~mytrack.notes = ~main_Theme.deepCopy.init;
+~mytrack.notes = ~mel8.deepCopy.init;
 
 /*
 *** Set up track to play on the synth
@@ -155,7 +158,7 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 ** Freq Manipulation
 */
 
-~f0 = ~main_Theme.freqs.deepCopy;
+~f0 = ~mel8.freqs.deepCopy;
 
 // ~f0 = ~f1
 
@@ -207,6 +210,14 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 */
 
 ~f1 = ~pitchMap.value(~f0,~t0,~t0.rotate(-5));
+
+/*
+*** Markov
+*/
+
+~f1 = ~marco.value(~test%12,~f0.at(0)%12,~f0.size);
+
+~f1 = ~pitchMap.value(~f1,~t0,~t0,low:64,high:72);
 
 /*
 *** load frequencies new and default

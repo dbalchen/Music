@@ -135,10 +135,9 @@ ret;
 
 ~pianoDyno = {
 	arg num, vel = 127, chan, src, out = 0, amp = 1, balance = 0, spread = 1, synth = "dPiano",
-	vca = ~vca, vcf = ~vcf, voc = 1, aoc = 1, cutoff = 12000, gain = 0.1, buffer = 0,
-	rate = 1.0, basef = 60, looper = 1;
+	vca = ~vca, vcf = ~vcf, voc = 1, aoc = 1, cutoff = 12000, gain = 0.1;
 
-	~playDyno.value(num, vel, chan, src, out, amp, balance, spread, synth, vca, vcf, voc, aoc, cutoff, gain, buffer, rate, basef,looper);
+	~playDyno.value(num, vel, chan, src, out, amp, balance, spread, synth, vca, vcf, voc, aoc, cutoff, gain);
 
 }
 

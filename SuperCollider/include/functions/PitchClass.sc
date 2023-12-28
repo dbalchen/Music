@@ -47,7 +47,7 @@
 			);
 
 			note = note + center;
-		
+
 			if(note > high,
 				{
 					note = note - 12;
@@ -63,7 +63,7 @@
 			);
 
 			newP = newP.add(note);
-			
+
 		}
 	);
 
@@ -147,4 +147,27 @@
 	mynotes;
 };
 
+
+
+// First order Markov Chain
+
+~marco = ({arg tset = nil, seed = nil, resultSize = 0 ;
+
+	var markSet = MarkovSet.new, f1 = [];
+
+	for ( 0, tset.size - 2, {arg i;
+		markSet.read(tset.at(i),tset.at(i+1));
+	}
+	);
+
+	resultSize.do({
+		f1 = f1.add(seed);
+		seed = markSet.next(seed);
+	});
+
+	f1;
+
+});
+
+// ~marco.value(~test,~test.at(0),~test.size);
 
