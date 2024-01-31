@@ -151,23 +151,31 @@
 
 // First order Markov Chain
 
-~marco = ({arg tset = nil, seed = nil, resultSize = 0 ;
+~marco = ({arg tset = nil, order = 1;
 
 	var markSet = MarkovSet.new, f1 = [];
 
-	for ( 0, tset.size - 2, {arg i;
+	for ( 0, tset.size - (order +1), {arg i;
+		
 		markSet.read(tset.at(i),tset.at(i+1));
+
+		
 	}
 	);
-
-	resultSize.do({
-		f1 = f1.add(seed);
-		seed = markSet.next(seed);
-	});
-
-	f1;
 
 });
 
 // ~marco.value(~test,~test.at(0),~test.size);
 
+~polo = ({arg marco, seed = nil, resultSize = 0;
+
+	var f1 = [];
+
+	resultSize.do({
+		f1 = f1.add(seed);
+		seed = marco.next(seed);
+	});
+
+	f1;
+
+});

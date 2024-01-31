@@ -40,6 +40,17 @@
 };
 
 
+~sigIn = {
+	arg gate = 0, sigIn = 0, numChannels = 1;
+
+	var sig;
+
+	sig = In.ar(sigIn,numChannels);
+
+	sig;
+};
+
+
 
 ~eSample = {
 	arg gate = 0,bufnum = 0, midinum = 60, rate = 1.0, basef = 60, looper = 1;
@@ -82,11 +93,11 @@
 
 		env = SynthDef.wrap(adsr,nil,prependArgs: [gate]);
 
-		sig = SynthDef.wrap(osc,nil,prependArgs: [gate])*env;
+		sig = SynthDef.wrap(osc,nil,prependArgs: [gate]);
 
 		fenv = SynthDef.wrap(fdsr,nil,prependArgs: [gate]);
 
-		sig = SynthDef.wrap(filter,nil, prependArgs: [sig,fenv]);
+		sig = env * SynthDef.wrap(filter,nil, prependArgs: [sig,fenv]);
 
 		sig = HPF.ar(sig,hpf);
 
@@ -94,7 +105,7 @@
 
 		sig = Splay.ar(sig,spread,center:balance);
 
-		Out.ar(out,sig * amp);
+		Out.ar(out,sig * (amp));
 
 	}).add;
 
@@ -103,15 +114,17 @@
 
 ~vca = MyADSR.new(0.5,0.50,0.7,0.5,"VCA");
 // ~vca.gui;
-~vcf = MyADSR.new(0.5,0.50,0.7,0.6,"VCF");
+~vcf = MyADSR.new(0.5,0.50,0.7,0.5,"VCF");
+// ~vcf.gui;
 
-
-~playDyno = {arg num, vel = 127, chan, src, out = 0, amp = 1, balance = 0, spread = 1, synth = "nbasicSynth", vca = ~vca, vcf = ~vcf, voc = 1, aoc = 1, cutoff = 12000, gain = 0.1, buffer = 0, rate = 1.0, basef = 60, looper = 1;
+~playDyno = {arg num, vel = 127, chan, src, out = 0, amp = 1.0, balance = 0, spread = 1, synth = "nbasicSynth", vca = ~vca, vcf = ~vcf, voc = 1, aoc = 1, cutoff = 12000, gain = 0.1, buffer = 0, rate = 1.0, basef = 60, looper = 1, sigIn = 0, numChannels = 1;
 	var ret;
 
 	ret = Synth(synth);
-	vel = (vel/127);
-	ret.set(\amp,amp*vel);
+
+	ret.set(\vel,vel);
+
+	ret.set(\amp,amp*(vel/127));
 
 	ret.set(\out,out);
 
@@ -128,6 +141,10 @@
 	ret.set(\basef,basef);
 	ret.set(\looper,looper);
 
+	ret.set(\sigIn,sigIn);
+	ret.set(\numChannels,numChannels);
+
+
 	ret.set(\voc,voc);
 	ret.set(\lagtime,0);
 	ret.set(\bend,0);
@@ -135,6 +152,7 @@
 	vcf.setfADSR(ret);
 	ret.set(\cutoff,cutoff);
 	ret.set(\gain,gain);
+
 	ret.set(\aoc,aoc);
 
 	ret.set(\hpf,32.5);
