@@ -27,4 +27,5 @@
     Convert a midi file into myNotes.
 *** [[file:~/workspace/RoboComp/pitchmap.py][pitchmap]]
     Batch pitchmapper
+*** [[file:include/functions/makeWaveTable.sc][MakeWaveTable]]
     

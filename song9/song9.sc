@@ -8,7 +8,6 @@ Server.default.makeGui;
 
 "/home/dbalchen/Music/SuperCollider/include/setup.sc".load;
 
-
 // Pitch Libraries
 
 "/home/dbalchen/Music/SuperCollider/include/functions/PitchClass.sc".load;
@@ -17,9 +16,6 @@ Server.default.makeGui;
 ** Set up a synth
 
 "/home/dbalchen/Music/SuperCollider/include/Synths/dynOsc.sc".load;
-
-
-
 
 ~dynOsc.value;
 
@@ -32,7 +28,7 @@ Server.default.makeGui;
 ** The Song
 */
 
-"/home/dbalchen/Music/song9/song9b.notes.sc".load;
+"/home/dbalchen/Music/song9/song9.notes.sc".load;
 
 /*
 ** Track 1
@@ -43,7 +39,7 @@ Lead Track
 
 ~mytrack = Track.new(~out0,0);
 
-~mytrack.notes = ~mel8.deepCopy.init;
+~mytrack.notes = ~threeAgain.deepCopy.init;
 
 /*
 *** Set up track to play on the synth
@@ -93,7 +89,7 @@ The drum track
 
 ~mytrack10 = Track.new(~out0,9);
 
-~mytrack10.notes = ~drumbasic.deepCopy.init;
+~mytrack10.notes = ~fancy_Drums.deepCopy.init;
 
 /*
 *** Play Track
@@ -133,8 +129,8 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 
 ~rp = {
 
-	//	~mytrack.transport.play;
-	//	~mytrack10.transport.play;
+		~mytrack.transport.play;
+		~mytrack10.transport.play;
 	//	~mytrack2.transport.play;
 	//  ~bs.set(\gate,1);
 
@@ -155,10 +151,12 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 
 
 /*
-** Freq Manipulation
+** Pitch Manipulation
 */
 
-~f0 = ~mel8.freqs.deepCopy;
+~f0 = ~threeAgain.freqs.deepCopy;
+
+~pcset.value(~f0);
 
 // ~f0 = ~f1
 
@@ -168,9 +166,10 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 - ti Inverse Pitch class
 */
 
-~t0 = [0,2,4,5,7,9,11];
-~ti = [0,11,9,7,5,4,2];
+~t0 =[ 0, 1, 2, 4, 5, 7, 9, 10 ]; // [0,2,4,5,7,9,11];
+~ti =[0,10,9,7,5,4,2,1]; // [0,11,9,7,5,4,2];
 
+~t0.rotate(3);
 /*
 *** Inverse
 */
@@ -216,8 +215,8 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 */
 
 ~f1 = ~marco.value(~test%12,~f0.at(0)%12,~f0.size);
-
-~f1 = ~pitchMap.value(~f1,~t0,~t0,low:64,high:72);
+~f0 = ~f0 + 12;
+~f1 = ~pitchMap.value(~f0,~t0,~t0,low:63,high:74);
 
 /*
 *** load frequencies new and default
