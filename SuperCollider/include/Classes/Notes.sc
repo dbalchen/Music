@@ -6,7 +6,8 @@
 Notes {
 
 	var <>freqs = nil,    <>freq = nil,
-	<>probs = nil,        <>numerator = 4,
+	<>probs = nil,        <>prob = nil,
+	<>numerator = 4,
 	<>waits = nil,        <>wait = nil,
 	<>lag = 0.0,          <>lags = nil,
 	<>vel = 1,            <>vels = nil,
@@ -52,6 +53,7 @@ Notes {
 		realtime = realtime.addFirst(0.0);
 
 		this.calcFreq.value;
+		this.calcProb.value;
 		this.calcDur.value;
 		this.calcWait.value;
 		this.calcLag.value;
@@ -69,6 +71,17 @@ Notes {
 		});
 
 		freq = Pn(lazy,inf).asStream;
+	}
+	
+	calcProb {
+
+		var lazy;
+
+		lazy = Plazy({
+			Pseq(probs,1);
+		});
+
+		prob = Pn(lazy,inf).asStream;
 	}
 
 

@@ -158,7 +158,6 @@
 	for ( 0, tset.size - (order +1), {arg i;
 		
 		markSet.read(tset.at(i),tset.at(i+1));
-
 		
 	}
 	);

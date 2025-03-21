@@ -1,9 +1,15 @@
 
-w = WavetablePrep("/home/dbalchen/Documents/Surge XT/Wavetables/Exported/Analyse_osc1_sceneA.wav".standardizePath, wtSize: 128,numMaps: 64);
-w.read(action: { "done".postln });
+w = WavetablePrep(
+	"/home/dbalchen/Documents/Surge XT/Wavetables/Exported/Analyse_osc1_sceneA.wav".standardizePath,
+	wtSize: 128,
+	numMaps: 64
+).
+read(action: { "done".postln }).
+write(
+	"/home/dbalchen/Desktop/growler-wt.wav"
+);
 
 w.tables.size  // 256 wavetable positions
-w.write("/home/dbalchen/Desktop/growler-wt.wav");
 
 w.gui(nil, Rect(800, 200, 500, 400)).front;  // have a look
 

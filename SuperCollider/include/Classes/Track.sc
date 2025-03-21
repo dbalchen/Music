@@ -2,7 +2,6 @@
 // MyTrack Class
 // =====================================================================
 
-
 Track {
 	var <>notes = nil, <>midiout = nil, <>out = 0,
 	<>channel = 0,  <>balance = 0, <>spread = 0,
@@ -38,12 +37,12 @@ Track {
 		balCC.free;
 		balCC = MIDIFunc.cc({arg ...args;
 			balance = (args[0]*(2/127))-1;
-			
+
 			"Channel ".post;
 			channel.post;
 			" Balance = ".post;
 			balance.postln;
-			
+
 		}, 10, channel);
 
 		noteON = {arg num,vel,chan,src,out,amp,balance;
@@ -93,8 +92,10 @@ Track {
 		transport = Pbind(\type, \midi,
 			\midiout, midiout,
 			\midicmd, \noteOn,
-			\note,  Pfunc.new({notes.freq.next}- 60),
-			\amp, Pfunc.new({notes.vel.next}),
+			\note,  Pfunc.new({
+				if (notes.prob.next.coin,{notes.freq.next},{notes.freq.next;'rest'});
+			}- 60),
+			\amp, Pfunc.new({(notes.vel.next/127)}),
 			\chan, channel,
 			\sustain, Pfunc.new({notes.duration.next}),
 			\dur, Pfunc.new({notes.wait.next})
