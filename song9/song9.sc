@@ -37,10 +37,22 @@ Lead Track
 *** Define Track and the notes to play
 */
 
-~mytrack = Track.new(~out0,0);
+~mytrack = Track.new(~out1,0);
 
-~mytrack.notes = ~threeAgain.deepCopy.init;
+~mytrack.notes = ~vA_and_VB.deepCopy.init;
 
+/*
+~mytrack.notes.freqs
+
+~mytrack.notes.durations = ~vA_and_VB.durations.copy * 0.5;
+
+~mytrack.notes.waits = ~vA_and_VB.waits.copy;
+
+
+// ~mytrack.notes.probs = ~mytrack.notes.probs * 0.6;//= ~vA_and_VB.probs.copy
+
+~mytrackb.notes.probs = ~mytrackb.notes.probs + 1;//= ~vA_and_VB.probs.copy
+*/
 /*
 *** Set up track to play on the synth
 ~mytrack.noteON = ~playDyno;
@@ -52,10 +64,18 @@ Lead Track
 */
 
 ~mytrack.transport.play;
+~mytrackb.transport.play;
 
-~mytrack.transport.mute;
+~mytrackb.transport.mute;
 
 ~mytrack.transport.unmute;
+
+/*
+** Harmony Tracks
+*/
+
+~mytrackb = Track.new(~out0,0);
+~mytrackb.notes = ~vA_and_VB_Inverse.deepCopy.init;
 
 /*
 ** Track 2
@@ -67,7 +87,7 @@ Bass Track
 
 ~mytrack2 = Track.new(~out0,1);
 
-~mytrack2.notes = ~bass.deepCopy.init;
+~mytrack2.notes = ~bassFrag.deepCopy.init;
 
 
 /*
@@ -89,7 +109,11 @@ The drum track
 
 ~mytrack10 = Track.new(~out0,9);
 
-~mytrack10.notes = ~fancy_Drums.deepCopy.init;
+~mytrack10.notes = ~fd2.deepCopy.init;
+
+~mytrack10.notes.vels = ~mytrack10.notes.vels - 25;
+
+~mytrack10.notes.probs = ~mytrack10.notes.probs * 0.66;
 
 /*
 *** Play Track
@@ -125,16 +149,16 @@ var synth = ~dynOsc.value("bsampler",osc: ~eSample);
 */
 ~rp = {};
 
-~startTimer.value(90);
+~startTimer.value(83);
 
 ~rp = {
 
 		~mytrack.transport.play;
-		~mytrack10.transport.play;
-	//	~mytrack2.transport.play;
+	//	~mytrack10.transport.play;
+  //  	~mytrack2.transport.play;
 	//  ~bs.set(\gate,1);
 
-	//	~mytrackb.transport.play;
+//		~mytrackb.transport.play;
 	//	~mytrackc.transport.play;
 	//  ~mytrackd.transport.play;
 
@@ -252,9 +276,9 @@ t.stop;
 *** Create Harmony Tracks
 */
 
-~mytrackb = Track.new(~out2,0);
+~mytrackb = Track.new(~out0,0);
 
-~mytrackb.notes = ~main_Theme.deepCopy.init;
+~mytrackb.notes = ~vA_and_VB_Inverse.deepCopy.init;
 
 ~mytrackb.notes.freqs = ~f1.deepCopy;
 ~mytrackb.notes.freqs = ~f0.deepCopy;
@@ -275,7 +299,7 @@ t.stop;
 */
 
 ~dsvca = MyADSR.new(1.05,2.3,0.2,0.6,"VCA");
-~dsvca.gui;
+//~dsvca.gui;
 ~dsvcf = MyADSR.new(2.35,1.35,0.04,0.7,"VCF");
 
 /*
@@ -329,7 +353,7 @@ t.stop;
 ~dynOsc.value("dStrings",osc: ~dstrings);
 
 ~playDstrings = {arg num, vel = 1, chan, src, out = 0, amp = 1, balance = 0, synth = "dStrings", vca = ~dsvca, vcf = ~dsvcf;
-	~playDyno.value(num, vel, chan, src, out, amp, balance,synth, vca, vcf,0, 1.0, 60,1);
+	~playDyno.value(num: num, vel: vel, chan: chan, src: src, out: out, amp: amp, balance: balance, synth: synth, vca: vca, vcf);
 };
 
 ~mytrack = Track.new(~out0,0);
